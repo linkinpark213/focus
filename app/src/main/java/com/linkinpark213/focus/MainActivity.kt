@@ -12,13 +12,12 @@ import com.google.api.client.json.gson.GsonFactory
 import com.google.api.services.calendar.Calendar
 import com.google.api.services.calendar.CalendarScopes
 import com.google.api.services.calendar.model.CalendarListEntry
+import com.google.api.services.calendar.model.Event
 import com.linkinpark213.focus.tasks.AsyncGetCalendarListTask
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
-    private var client: Calendar? = null
-    private var credential: GoogleAccountCredential? = null
-    var focusCalendar: CalendarListEntry? = null
+    private var calendarManager: CalendarManager? = null
 
     companion object {
         const val REQUEST_ACCOUNTS = 1
@@ -30,26 +29,16 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        this.credential = GoogleAccountCredential.usingOAuth2(
-            applicationContext,
-            Collections.singleton(CalendarScopes.CALENDAR)
-        )
-        this.credential!!.selectedAccount = Account("daiki2kobayashi@gmail.com", "com.linkinpark213.focus")
-
-        this.client = Calendar.Builder(
-            AndroidHttp.newCompatibleTransport(),
-            GsonFactory.getDefaultInstance(),
-            credential
-        ).setApplicationName("Focus").build()
+        this.calendarManager = CalendarManager(this.applicationContext, "daiki2kobayashi@gmail.com")
 
         val mainButton = findViewById<Button>(R.id.button)
 
-//        startActivityForResult(this.credential!!.newChooseAccountIntent(), REQUEST_ACCOUNTS)
+        AsyncGetCalendarListTask(this.calendarManager!!).execute()
 
         // EventListeners
         mainButton.setOnClickListener {
             run {
-                AsyncGetCalendarListTask(this, this.client!!).execute()
+                AsyncGetCalendarListTask(this.calendarManager!!).execute()
             }
         }
     }
@@ -79,14 +68,16 @@ class MainActivity : AppCompatActivity() {
         when (requestCode) {
             REQUEST_ACCOUNTS -> {
                 println("Requested accounts")
-                AsyncGetCalendarListTask(this, this.client!!).execute()
             }
             REQUEST_AUTHORIZATION -> {
-//                this.startActivityForResult()
                 println("Requested authorization")
             }
             REQUEST_READ_CALENDAR -> {
                 println("Requested reading calendar")
+                AsyncGetCalendarListTask(this.calendarManager!!).execute()
+                val notifyIntent = Intent(this, this.javaClass)
+                notifyIntent.flags = (Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                
             }
         }
     }
