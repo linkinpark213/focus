@@ -3,6 +3,7 @@ package com.linkinpark213.focus
 import android.accounts.Account
 import android.content.Context
 import android.content.Intent
+import android.widget.TextView
 import com.google.api.client.extensions.android.http.AndroidHttp
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
 import com.google.api.client.json.gson.GsonFactory
@@ -12,7 +13,10 @@ import com.google.api.services.calendar.model.CalendarListEntry
 import com.google.api.services.calendar.model.Event
 import java.util.*
 
-class CalendarManager(applicationContext: Context, accountName: String) {
+class CalendarManager(
+    applicationContext: Context, accountName: String, ongoingEventTextView: TextView,
+    incomingEventTextView: TextView
+) {
     private var credential: GoogleAccountCredential? = null
     var client: Calendar? = null
     var focusCalendar: CalendarListEntry? = null

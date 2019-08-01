@@ -1,4 +1,16 @@
 <resources>
     <string name="app_name">Focus</string>
-    <string name="main_button_text">Get Calendars</string>
+    <string name="focus_on_button_text">Turn ON Focus!</string>
+    <string name="focus_off_button_text">Turn OFF Focus!</string>
+    <string name="ongoing_text">Ongoing Event:</string>
+    <string name="incoming_text">Incoming Event:</string>
+    <string name="before_clock_text">It\'s</string>
+    <string name="greeting_morning_text">Nice day for working! XD</string>
+    <string name="greeting_noon_text">Want to take a lunch break? :P</string>
+    <string name="greeting_afternoon_text">Speed to full! XD</string>
+    <string name="greeting_evening_text">Better rest your eyes after work ;)</string>
+    <string name="greeting_night_text">Mind your work-life balance :)</string>
+    <string name="greeting_focus_text">You should be working now, right?</string>
+    <string name="dot_text">.</string>
+    <string name="no_event_text">None</string>
 </resources>

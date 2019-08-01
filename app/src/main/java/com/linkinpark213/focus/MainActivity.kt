@@ -14,10 +14,13 @@ import com.google.api.services.calendar.CalendarScopes
 import com.google.api.services.calendar.model.CalendarListEntry
 import com.google.api.services.calendar.model.Event
 import com.linkinpark213.focus.tasks.AsyncGetCalendarListTask
+import kotlinx.android.synthetic.main.activity_main.view.*
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
     private var calendarManager: CalendarManager? = null
+    private var serviceIntent: Intent = Intent()
+    private var focusOn: Boolean = false
 
     companion object {
         const val REQUEST_ACCOUNTS = 1
@@ -38,9 +41,20 @@ class MainActivity : AppCompatActivity() {
         // EventListeners
         mainButton.setOnClickListener {
             run {
-                AsyncGetCalendarListTask(this.calendarManager!!).execute()
+                if (this.focusOn) {
+                    stopService(this.serviceIntent)
+                    it.button.setText(R.string.focus_on_button_text)
+                    this.focusOn = false
+                } else {
+                    this.serviceIntent.action = "com.linkinpark213.service.FETCH_EVENTS_SERVICE"
+                    this.serviceIntent.`package` = packageName
+                    startService(this.serviceIntent)
+                    this.focusOn = true
+                    it.button.setText(R.string.focus_off_button_text)
+                }
             }
         }
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -77,7 +91,7 @@ class MainActivity : AppCompatActivity() {
                 AsyncGetCalendarListTask(this.calendarManager!!).execute()
                 val notifyIntent = Intent(this, this.javaClass)
                 notifyIntent.flags = (Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                
+
             }
         }
     }
