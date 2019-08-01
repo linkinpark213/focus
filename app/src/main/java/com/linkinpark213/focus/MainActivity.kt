@@ -32,7 +32,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        this.calendarManager = CalendarManager(this.applicationContext, "daiki2kobayashi@gmail.com")
+        this.calendarManager = CalendarManager(this.applicationContext, "daiki2kobayashi@gmail.com",
+            findViewById(R.id.ongoingEventTextView),
+            findViewById(R.id.incomingEventTextView))
 
         val mainButton = findViewById<Button>(R.id.button)
 

@@ -29,6 +29,7 @@
                 <action android:name="com.linkinpark213.service.FETCH_EVENTS_SERVICE"/>
             </intent-filter>
         </service>
+        <receiver android:name=".AlarmReceiver"></receiver>
     </application>
 
 
