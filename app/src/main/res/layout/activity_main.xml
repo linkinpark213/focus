@@ -7,7 +7,7 @@
         android:layout_height="match_parent"
         tools:context=".MainActivity">
 
-    <LinearLayout android:layout_width="364dp" android:layout_height="346dp"
+    <LinearLayout android:layout_width="350dp" android:layout_height="346dp"
                   android:orientation="vertical"
                   app:layout_constraintBottom_toTopOf="@+id/button" app:layout_constraintStart_toStartOf="parent"
                   app:layout_constraintEnd_toEndOf="parent"
@@ -36,8 +36,9 @@
                       android:textColor="@color/colorAccent"
             />
         </LinearLayout>
+
         <TextView
-                android:layout_width="217dp"
+                android:layout_width="match_parent"
                 android:layout_height="36dp"
                 android:text="@string/ongoing_text"
                 android:id="@+id/ongoingTextView"
@@ -47,7 +48,7 @@
                 app:layout_constraintHorizontal_bias="0.5" app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toTopOf="@+id/button"/>
         <TextView
-                android:layout_width="217dp"
+                android:layout_width="match_parent"
                 android:layout_height="36dp"
                 android:text="@string/no_event_text"
                 android:id="@+id/ongoingEventTextView"
@@ -56,7 +57,7 @@
                 app:layout_constraintHorizontal_bias="0.5" app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toTopOf="@+id/button"/>
         <TextView
-                android:layout_width="217dp"
+                android:layout_width="match_parent"
                 android:layout_height="36dp"
                 android:text="@string/incoming_text"
                 android:id="@+id/incomingTextView"
@@ -66,7 +67,7 @@
                 app:layout_constraintEnd_toEndOf="parent" tools:layout_editor_absoluteY="302dp"/>
 
         <TextView
-                android:layout_width="217dp"
+                android:layout_width="match_parent"
                 android:layout_height="36dp"
                 android:text="@string/no_event_text"
                 android:id="@+id/incomingEventTextView"
@@ -84,6 +85,9 @@
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginBottom="30dp"/>
+            android:layout_marginBottom="30dp"
+            android:background="@drawable/button_background_on"
+            android:textColor="@android:color/white"
+    />
 
 </android.support.constraint.ConstraintLayout>

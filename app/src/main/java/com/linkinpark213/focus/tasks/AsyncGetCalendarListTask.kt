@@ -3,9 +3,7 @@ package com.linkinpark213.focus.tasks
 import android.os.AsyncTask
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException
 import com.google.api.client.util.DateTime
-import com.google.api.services.calendar.Calendar
 import com.linkinpark213.focus.CalendarManager
-import com.linkinpark213.focus.MainActivity
 
 class AsyncGetCalendarListTask(var calendarManager: CalendarManager) : AsyncTask<Void, Void, String>() {
     override fun doInBackground(vararg params: Void?): String? {
@@ -41,13 +39,13 @@ class AsyncGetCalendarListTask(var calendarManager: CalendarManager) : AsyncTask
                 val event = events[0]
                 if (event.start.dateTime.value > currentTime.value) {
                     calendarManager.ongoingEvent = null
-                    calendarManager.comingEvent = event
+                    calendarManager.incomingEvent = event
                 } else {
                     calendarManager.ongoingEvent = event
                     if (events.size > 1) {
-                        calendarManager.comingEvent = events[1]
+                        calendarManager.incomingEvent = events[1]
                     } else {
-                        calendarManager.comingEvent = null
+                        calendarManager.incomingEvent = null
                     }
                 }
             }
