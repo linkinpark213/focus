@@ -1,4 +1,4 @@
-package com.linkinpark213.focus
+package com.linkinpark213.focus.service
 
 import android.app.AlarmManager
 import android.app.PendingIntent
@@ -7,8 +7,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.IBinder
 import android.os.SystemClock
+import com.linkinpark213.focus.AlarmReceiver
 
-class FetchEventsAlarmService : Service() {
+class UpdateUIAlarmService : Service() {
     override fun onCreate() {
         println("Events-fetching Service is ON")
     }
@@ -25,7 +26,7 @@ class FetchEventsAlarmService : Service() {
         sendBroadcast(updateUIIntent)
 
         val alarmManager: AlarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val timePeriod: Int = 1 * 1000
+        val timePeriod: Int = 10 * 1000
         val triggerAtTime: Long = SystemClock.elapsedRealtime() + timePeriod
         val i = Intent(this, AlarmReceiver::class.java)
         val pendingIntent: PendingIntent = PendingIntent.getBroadcast(this, 0, i, 0)

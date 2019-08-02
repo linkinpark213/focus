@@ -1,33 +1,25 @@
 package com.linkinpark213.focus
 
-import android.accounts.Account
 import android.app.Activity
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
-import android.os.Message
+import android.provider.Settings
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
-import com.google.api.client.extensions.android.http.AndroidHttp
-import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
-import com.google.api.client.json.gson.GsonFactory
-import com.google.api.services.calendar.Calendar
-import com.google.api.services.calendar.CalendarScopes
-import com.google.api.services.calendar.model.CalendarListEntry
-import com.google.api.services.calendar.model.Event
-import com.google.gson.Gson
 import com.linkinpark213.focus.tasks.AsyncGetCalendarListTask
 import kotlinx.android.synthetic.main.activity_main.view.*
-import java.util.*
 
 class MainActivity : AppCompatActivity() {
     private var calendarManager: CalendarManager? = null
-    private var serviceIntent: Intent = Intent()
+    private var updateServiceIntent: Intent = Intent()
+    private var windowServiceIntent: Intent = Intent()
     private var focusOn: Boolean = false
     private var ongoingEventTextView: TextView? = null
     private var incomingEventTextView: TextView? = null
@@ -59,6 +51,7 @@ class MainActivity : AppCompatActivity() {
         const val REQUEST_ACCOUNTS = 1
         const val REQUEST_AUTHORIZATION = 2
         const val REQUEST_READ_CALENDAR = 3
+        const val REQUEST_WINDOW_OVERLAY = 4
         const val MESSAGE_UPDATE_EVENTS = 0
     }
 
@@ -68,6 +61,11 @@ class MainActivity : AppCompatActivity() {
 
         intentFilter.addAction("com.linkinpark213.update")
         registerReceiver(uiUpdateReceiver, intentFilter)
+
+        this.windowServiceIntent.action = "com.linkinpark213.service.WINDOW_SERVICE"
+        this.windowServiceIntent.`package` = packageName
+        this.updateServiceIntent.action = "com.linkinpark213.service.FETCH_EVENTS_SERVICE"
+        this.updateServiceIntent.`package` = packageName
 
         this.mainButton = findViewById<Button>(R.id.button)
         this.ongoingEventTextView = findViewById(R.id.ongoingEventTextView)
@@ -79,27 +77,37 @@ class MainActivity : AppCompatActivity() {
             this.uiMessageHandler
         )
 
-        AsyncGetCalendarListTask(this.calendarManager!!).execute()
-
         this.uiMessageHandler.sendEmptyMessage(0)
+
+        // Turn on a service that keeps updating UI
+        startService(this.updateServiceIntent)
 
         // EventListeners
         this.mainButton!!.setOnClickListener {
             run {
                 if (this.focusOn) {
-                    stopService(this.serviceIntent)
+                    this.focusOn = false
                     it.button.setText(R.string.focus_on_button_text)
                     it.button.background = resources.getDrawable(R.drawable.button_background_on, theme)
-                    this.focusOn = false
                     Toast.makeText(applicationContext, "Focus mode is turned OFF.", Toast.LENGTH_SHORT).show()
+
+                    // Kill floating window
+                    stopService(this.windowServiceIntent)
                 } else {
-                    this.serviceIntent.action = "com.linkinpark213.service.FETCH_EVENTS_SERVICE"
-                    this.serviceIntent.`package` = packageName
-                    startService(this.serviceIntent)
                     this.focusOn = true
                     it.button.setText(R.string.focus_off_button_text)
                     it.button.background = resources.getDrawable(R.drawable.button_background_off, theme)
                     Toast.makeText(applicationContext, "Focus mode is turned ON.", Toast.LENGTH_SHORT).show()
+
+                    // Turn on a service that puts a floating window
+                    if (!Settings.canDrawOverlays(this)) {
+                        startActivityForResult(
+                            Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName")),
+                            REQUEST_WINDOW_OVERLAY
+                        )
+                    } else {
+                        startService(this.windowServiceIntent)
+                    }
                 }
             }
         }
@@ -110,6 +118,12 @@ class MainActivity : AppCompatActivity() {
         AsyncGetCalendarListTask(this.calendarManager!!).execute()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        // Stop updating UI
+        stopService(this.updateServiceIntent)
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         print("Request code: ")
@@ -118,6 +132,7 @@ class MainActivity : AppCompatActivity() {
                 REQUEST_ACCOUNTS -> "REQUEST_ACCOUNTS"
                 REQUEST_AUTHORIZATION -> "REQUEST_AUTHORIZATION"
                 REQUEST_READ_CALENDAR -> "REQUEST_READ_CALENDAR"
+                REQUEST_WINDOW_OVERLAY -> "REQUEST_WINDOW_OVERLAY"
                 else -> "UNKNOWN REQUEST"
             }
         )
@@ -144,7 +159,11 @@ class MainActivity : AppCompatActivity() {
                 AsyncGetCalendarListTask(this.calendarManager!!).execute()
                 val notifyIntent = Intent(this, this.javaClass)
                 notifyIntent.flags = (Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-
+            }
+            REQUEST_WINDOW_OVERLAY -> {
+                println("Requested windor overlay")
+                if (resultCode == Activity.RESULT_OK)
+                    startService(this.windowServiceIntent)
             }
         }
     }
