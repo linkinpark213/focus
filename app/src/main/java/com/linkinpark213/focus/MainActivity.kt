@@ -2,7 +2,10 @@ package com.linkinpark213.focus
 
 import android.accounts.Account
 import android.app.Activity
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -33,12 +36,24 @@ class MainActivity : AppCompatActivity() {
         when (it.what) {
             MESSAGE_UPDATE_EVENTS -> {
                 val strings: Array<String>? = it.data.getStringArray("strings")
-                this.ongoingEventTextView!!.text = strings?.get(0) ?: "None"
-                this.incomingEventTextView!!.text = strings?.get(3) ?: "None"
+                if (strings != null) {
+                    this.ongoingEventTextView!!.text = strings[0]
+                    this.incomingEventTextView!!.text = strings[3]
+                }
             }
         }
         return@Handler false
     }
+
+    class UIUpdateReceiver(private var mainActivity: MainActivity) : BroadcastReceiver() {
+        override fun onReceive(p0: Context?, p1: Intent?) {
+            AsyncGetCalendarListTask(this.mainActivity.calendarManager!!).execute()
+            this.mainActivity.uiMessageHandler.sendEmptyMessage(0)
+        }
+    }
+
+    private var uiUpdateReceiver = UIUpdateReceiver(this)
+    private var intentFilter = IntentFilter()
 
     companion object {
         const val REQUEST_ACCOUNTS = 1
@@ -50,6 +65,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        intentFilter.addAction("com.linkinpark213.update")
+        registerReceiver(uiUpdateReceiver, intentFilter)
 
         this.mainButton = findViewById<Button>(R.id.button)
         this.ongoingEventTextView = findViewById(R.id.ongoingEventTextView)
@@ -77,7 +95,6 @@ class MainActivity : AppCompatActivity() {
                 } else {
                     this.serviceIntent.action = "com.linkinpark213.service.FETCH_EVENTS_SERVICE"
                     this.serviceIntent.`package` = packageName
-                    this.serviceIntent.putExtra("calendarManager", Gson().toJson(this.calendarManager))
                     startService(this.serviceIntent)
                     this.focusOn = true
                     it.button.setText(R.string.focus_off_button_text)
@@ -86,7 +103,11 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
 
+    override fun onResume() {
+        super.onResume()
+        AsyncGetCalendarListTask(this.calendarManager!!).execute()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

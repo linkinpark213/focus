@@ -6,7 +6,7 @@ import android.content.Intent
 
 class AlarmReceiver : BroadcastReceiver() {
     override fun onReceive(p0: Context?, p1: Intent?) {
-        val intent = Intent(p0, FetchEventsService::class.java)
+        val intent = Intent(p0, FetchEventsAlarmService::class.java)
         p0!!.startService(intent)
     }
 

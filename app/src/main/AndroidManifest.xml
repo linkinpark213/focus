@@ -24,7 +24,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <service android:name=".FetchEventsService">
+        <service android:name=".FetchEventsAlarmService">
             <intent-filter>
                 <action android:name="com.linkinpark213.service.FETCH_EVENTS_SERVICE"/>
             </intent-filter>
