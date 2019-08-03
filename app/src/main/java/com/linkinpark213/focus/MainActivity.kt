@@ -36,16 +36,16 @@ class MainActivity : AppCompatActivity() {
         return@Handler false
     }
 
-    class UIUpdateReceiver(private var mainActivity: MainActivity) : BroadcastReceiver() {
+    class UIUpdateReceiver(private var uiMessageHandler: Handler) : BroadcastReceiver() {
         override fun onReceive(p0: Context?, p1: Intent?) {
             val message = Message()
             message.what = MainActivity.MESSAGE_UPDATE_EVENTS
             message.data.putBundle("data", p1!!.extras)
-            this.mainActivity.uiMessageHandler.sendMessage(message)
+            this.uiMessageHandler.sendMessage(message)
         }
     }
 
-    private var uiUpdateReceiver = UIUpdateReceiver(this)
+    private var uiUpdateReceiver = UIUpdateReceiver(this.uiMessageHandler)
     private var updateIntentFilter = IntentFilter()
 
     companion object {

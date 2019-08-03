@@ -12,5 +12,5 @@
     <string name="greeting_night_text">Mind your work-life balance :)</string>
     <string name="greeting_focus_text">You should be working now, right?</string>
     <string name="dot_text">.</string>
-    <string name="no_event_text">None</string>
+    <string name="loading_event_text">Loading</string>
 </resources>

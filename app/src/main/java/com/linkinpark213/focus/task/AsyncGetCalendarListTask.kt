@@ -8,10 +8,13 @@ import com.linkinpark213.focus.CalendarManager
 class AsyncGetCalendarListTask(var calendarManager: CalendarManager) : AsyncTask<Void, Void, String>() {
     override fun doInBackground(vararg params: Void?): String? {
         try {
-            val calendars = calendarManager.client!!.CalendarList().list().execute().items
-            for (calendar in calendars) {
-                if (calendar.summary == "Focus") {
-                    calendarManager.focusCalendar = calendar
+            if (calendarManager.focusCalendar == null) {
+                val calendars = calendarManager.client!!.CalendarList().list().execute().items
+                for (calendar in calendars) {
+                    if (calendar.summary == "Focus") {
+                        calendarManager.focusCalendar = calendar
+                        println("Calendar named \"Focus\" found. The ID is: ${calendarManager.focusCalendar!!.id}")
+                    }
                 }
             }
             if (calendarManager.focusCalendar == null) {
@@ -25,7 +28,6 @@ class AsyncGetCalendarListTask(var calendarManager: CalendarManager) : AsyncTask
 
             val currentTime = DateTime(System.currentTimeMillis())
             println("Current time: $currentTime")
-            println("Calendar named \"Focus\" found. The ID is: ${calendarManager.focusCalendar!!.id}")
             val calendar = calendarManager.client!!.calendars().get(calendarManager.focusCalendar!!.id).execute()
             val events = calendarManager.client!!.events()
                 .list(calendar.id)
@@ -51,7 +53,7 @@ class AsyncGetCalendarListTask(var calendarManager: CalendarManager) : AsyncTask
             }
 
         } catch (e: UserRecoverableAuthIOException) {
-            println("Caught!")
+            e.printStackTrace()
         }
         return ""
     }

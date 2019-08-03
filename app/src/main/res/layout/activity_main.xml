@@ -50,7 +50,7 @@
         <TextView
                 android:layout_width="match_parent"
                 android:layout_height="36dp"
-                android:text="@string/no_event_text"
+                android:text="@string/loading_event_text"
                 android:id="@+id/ongoingEventTextView"
                 android:textSize="20sp"
                 app:layout_constraintStart_toStartOf="parent"
@@ -69,7 +69,7 @@
         <TextView
                 android:layout_width="match_parent"
                 android:layout_height="36dp"
-                android:text="@string/no_event_text"
+                android:text="@string/loading_event_text"
                 android:id="@+id/incomingEventTextView"
                 android:textSize="20sp"
                 app:layout_constraintStart_toStartOf="parent"
