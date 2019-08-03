@@ -9,16 +9,15 @@ import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+import android.os.Message
 import android.provider.Settings
-import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
-import com.linkinpark213.focus.tasks.AsyncGetCalendarListTask
+import com.linkinpark213.focus.task.AsyncGetCalendarListTask
 import kotlinx.android.synthetic.main.activity_main.view.*
 
 class MainActivity : AppCompatActivity() {
-    private var calendarManager: CalendarManager? = null
     private var updateServiceIntent: Intent = Intent()
     private var windowServiceIntent: Intent = Intent()
     private var focusOn: Boolean = false
@@ -28,11 +27,9 @@ class MainActivity : AppCompatActivity() {
     private var uiMessageHandler: Handler = Handler {
         when (it.what) {
             MESSAGE_UPDATE_EVENTS -> {
-                val strings: Array<String>? = it.data.getStringArray("strings")
-                if (strings != null) {
-                    this.ongoingEventTextView!!.text = strings[0]
-                    this.incomingEventTextView!!.text = strings[3]
-                }
+                val data: Bundle = it.data.getBundle("data")!!
+                this.ongoingEventTextView!!.text = data.getString("ongoingEventSummary")
+                this.incomingEventTextView!!.text = data.getString("incomingEventSummary")
             }
         }
         return@Handler false
@@ -40,13 +37,15 @@ class MainActivity : AppCompatActivity() {
 
     class UIUpdateReceiver(private var mainActivity: MainActivity) : BroadcastReceiver() {
         override fun onReceive(p0: Context?, p1: Intent?) {
-            AsyncGetCalendarListTask(this.mainActivity.calendarManager!!).execute()
-            this.mainActivity.uiMessageHandler.sendEmptyMessage(0)
+            val message = Message()
+            message.what = MainActivity.MESSAGE_UPDATE_EVENTS
+            message.data.putBundle("data", p1!!.extras)
+            this.mainActivity.uiMessageHandler.sendMessage(message)
         }
     }
 
     private var uiUpdateReceiver = UIUpdateReceiver(this)
-    private var intentFilter = IntentFilter()
+    private var updateIntentFilter = IntentFilter()
 
     companion object {
         const val REQUEST_ACCOUNTS = 1
@@ -60,8 +59,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        intentFilter.addAction("com.linkinpark213.update")
-        registerReceiver(uiUpdateReceiver, intentFilter)
+        updateIntentFilter.addAction("com.linkinpark213.focus.updateui")
+        registerReceiver(uiUpdateReceiver, updateIntentFilter)
 
         this.windowServiceIntent.action = "com.linkinpark213.service.WINDOW_SERVICE"
         this.windowServiceIntent.`package` = packageName
@@ -71,14 +70,6 @@ class MainActivity : AppCompatActivity() {
         this.mainButton = findViewById<Button>(R.id.button)
         this.ongoingEventTextView = findViewById(R.id.ongoingEventTextView)
         this.incomingEventTextView = findViewById(R.id.incomingEventTextView)
-
-        this.calendarManager = CalendarManager(
-            this.applicationContext,
-            "daiki2kobayashi@gmail.com",
-            this.uiMessageHandler
-        )
-
-        this.uiMessageHandler.sendEmptyMessage(0)
 
         // Turn on a service that keeps updating UI
         startService(this.updateServiceIntent)
@@ -163,9 +154,6 @@ class MainActivity : AppCompatActivity() {
             }
             REQUEST_READ_CALENDAR -> {
                 println("Requested reading calendar")
-                AsyncGetCalendarListTask(this.calendarManager!!).execute()
-                val notifyIntent = Intent(this, this.javaClass)
-                notifyIntent.flags = (Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
             }
             REQUEST_WINDOW_OVERLAY -> {
                 println("Requested window overlay")

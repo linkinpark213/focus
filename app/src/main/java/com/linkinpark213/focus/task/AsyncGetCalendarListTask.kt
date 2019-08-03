@@ -1,7 +1,6 @@
-package com.linkinpark213.focus.tasks
+package com.linkinpark213.focus.task
 
 import android.os.AsyncTask
-import android.widget.Toast
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException
 import com.google.api.client.util.DateTime
 import com.linkinpark213.focus.CalendarManager
@@ -50,7 +49,6 @@ class AsyncGetCalendarListTask(var calendarManager: CalendarManager) : AsyncTask
                     }
                 }
             }
-            calendarManager.printCurrentEvents()
 
         } catch (e: UserRecoverableAuthIOException) {
             println("Caught!")
