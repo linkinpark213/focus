@@ -98,16 +98,21 @@ class MainActivity : AppCompatActivity() {
                     this.focusOn = true
                     it.button.setText(R.string.focus_off_button_text)
                     it.button.background = resources.getDrawable(R.drawable.button_background_off, theme)
-                    Toast.makeText(applicationContext, "Focus mode is turned ON.", Toast.LENGTH_SHORT).show()
 
                     // Turn on a service that puts a floating window
                     if (!Settings.canDrawOverlays(this)) {
+                        Toast.makeText(
+                            applicationContext,
+                            "Please permit Focus to display floating windows.",
+                            Toast.LENGTH_LONG
+                        ).show()
                         startActivityForResult(
                             Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName")),
                             REQUEST_WINDOW_OVERLAY
                         )
                     } else {
                         startService(this.windowServiceIntent)
+                        Toast.makeText(applicationContext, "Focus mode is turned ON.", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
@@ -116,11 +121,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         moveTaskToBack(true)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        println("Resumed")
     }
 
     override fun onDestroy() {
@@ -168,9 +168,16 @@ class MainActivity : AppCompatActivity() {
                 notifyIntent.flags = (Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
             }
             REQUEST_WINDOW_OVERLAY -> {
-                println("Requested windor overlay")
-                if (resultCode == Activity.RESULT_OK)
+                println("Requested window overlay")
+                if (resultCode == Activity.RESULT_OK) {
                     startService(this.windowServiceIntent)
+                    Toast.makeText(applicationContext, "Focus mode is turned ON.", Toast.LENGTH_SHORT).show()
+                } else if (resultCode == Activity.RESULT_CANCELED) {
+                    if (Settings.canDrawOverlays(this)) {
+                        startService(this.windowServiceIntent)
+                        Toast.makeText(applicationContext, "Focus mode is turned ON.", Toast.LENGTH_SHORT).show()
+                    }
+                }
             }
         }
     }
