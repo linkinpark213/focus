@@ -11,6 +11,7 @@ import com.linkinpark213.focus.view.FloatingView
 
 class FloatingWindowService : Service() {
     private var mFloatingView: FloatingView? = null
+    private var on: Boolean = false
 
     companion object {
         const val MESSAGE_WINDOW_ON = 0
@@ -20,10 +21,16 @@ class FloatingWindowService : Service() {
     private val windowMessageHandler = Handler {
         when (it.what) {
             MESSAGE_WINDOW_ON -> {
-                this.mFloatingView!!.show()
+                if (!this.on) {
+                    this.on = true
+                    this.mFloatingView!!.show()
+                }
             }
             MASSAGE_WINDOW_OFF -> {
-                this.mFloatingView!!.hide()
+                if (this.on) {
+                    this.on = false
+                    this.mFloatingView!!.hide()
+                }
             }
         }
         return@Handler false
@@ -31,7 +38,11 @@ class FloatingWindowService : Service() {
 
     class WindowUpdateReceiver(private val windowMessageHandler: Handler) : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            this.windowMessageHandler.sendEmptyMessage(FloatingWindowService.MESSAGE_WINDOW_ON)
+            val status = intent!!.getBooleanExtra("on", false)
+            if (status)
+                this.windowMessageHandler.sendEmptyMessage(FloatingWindowService.MESSAGE_WINDOW_ON)
+            else
+                this.windowMessageHandler.sendEmptyMessage(FloatingWindowService.MASSAGE_WINDOW_OFF)
         }
     }
 
@@ -49,9 +60,6 @@ class FloatingWindowService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        if (intent != null) {
-            this.mFloatingView!!.show()
-        }
         return super.onStartCommand(intent, flags, startId)
     }
 

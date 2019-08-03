@@ -14,13 +14,14 @@ import com.linkinpark213.focus.task.AsyncGetCalendarListTask
 
 class RealTimeUpdateService : Service() {
     private var calendarManager: CalendarManager? = null
+    private var accountName: String? = null
+
+    companion object {
+        const val interval = 5
+    }
 
     override fun onCreate() {
         println("Events-fetching Service is ON")
-        this.calendarManager = CalendarManager(
-            this.applicationContext,
-            "daiki2kobayashi@gmail.com"
-        )
     }
 
     override fun onBind(intent: Intent?): IBinder? {
@@ -29,14 +30,24 @@ class RealTimeUpdateService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        if (this.calendarManager == null) {
+            this.accountName = intent!!.getStringExtra("accountName")
+            this.calendarManager = CalendarManager(
+                this.applicationContext,
+                this.accountName!!
+            )
+        }
         // Check current calendar situation
         AsyncGetCalendarListTask(this.calendarManager!!).execute()
 
         // Send request to update MainActivity UI
         updateMainUI()
 
+        // Send request to update Floating Window
+        updateFloatingWindow()
+
         val alarmManager: AlarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val timePeriod: Int = 10 * 1000
+        val timePeriod: Int = interval * 1000
         val triggerAtTime: Long = SystemClock.elapsedRealtime() + timePeriod
         val i = Intent(this, AlarmReceiver::class.java)
         val pendingIntent: PendingIntent = PendingIntent.getBroadcast(this, 0, i, 0)
@@ -82,6 +93,17 @@ class RealTimeUpdateService : Service() {
         updateUIIntent.putExtra("incomingEventStartTime", incomingEventStartTime)
         updateUIIntent.putExtra("incomingEventEndTime", incomingEventEndTime)
         sendBroadcast(updateUIIntent)
+    }
+
+    private fun updateFloatingWindow() {
+        val windowOnIntent = Intent()
+        windowOnIntent.setAction("com.linkinpark213.focus.updatewindow")
+        if (calendarManager!!.ongoingEvent != null) {
+            windowOnIntent.putExtra("on", true)
+        } else {
+            windowOnIntent.putExtra("on", false)
+        }
+        sendBroadcast(windowOnIntent)
     }
 
 }

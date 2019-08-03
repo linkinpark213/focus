@@ -1,10 +1,8 @@
 package com.linkinpark213.focus
 
+import android.accounts.AccountManager
 import android.app.Activity
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
+import android.content.*
 import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -14,6 +12,9 @@ import android.provider.Settings
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import com.google.android.gms.auth.GoogleAuthUtil
+import com.google.android.gms.common.AccountPicker
+import com.google.android.gms.common.GooglePlayServicesUtil
 import com.linkinpark213.focus.task.AsyncGetCalendarListTask
 import kotlinx.android.synthetic.main.activity_main.view.*
 
@@ -59,20 +60,35 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        updateIntentFilter.addAction("com.linkinpark213.focus.updateui")
-        registerReceiver(uiUpdateReceiver, updateIntentFilter)
-
         this.windowServiceIntent.action = "com.linkinpark213.service.WINDOW_SERVICE"
         this.windowServiceIntent.`package` = packageName
         this.updateServiceIntent.action = "com.linkinpark213.service.FETCH_EVENTS_SERVICE"
         this.updateServiceIntent.`package` = packageName
 
+        if (GooglePlayServicesUtil.isGooglePlayServicesAvailable(applicationContext) == 0) {
+            try {
+                val intent = AccountPicker.newChooseAccountIntent(
+                    null,
+                    null,
+                    Array<String>(1) { _ -> GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE },
+                    false, null, null, null, null
+                )
+                startActivityForResult(intent, REQUEST_ACCOUNTS)
+            } catch (e: ActivityNotFoundException) {
+                println("Activity not found!")
+            }
+        } else {
+            Toast.makeText(applicationContext, "Focus requires Google Play Service.", Toast.LENGTH_LONG).show()
+            finish()
+        }
+
         this.mainButton = findViewById<Button>(R.id.button)
         this.ongoingEventTextView = findViewById(R.id.ongoingEventTextView)
         this.incomingEventTextView = findViewById(R.id.incomingEventTextView)
 
-        // Turn on a service that keeps updating UI
-        startService(this.updateServiceIntent)
+        // Turn on a receiver to update UI
+        updateIntentFilter.addAction("com.linkinpark213.focus.updateui")
+        registerReceiver(uiUpdateReceiver, updateIntentFilter)
 
         // EventListeners
         this.mainButton!!.setOnClickListener {
@@ -81,10 +97,10 @@ class MainActivity : AppCompatActivity() {
                     this.focusOn = false
                     it.button.setText(R.string.focus_on_button_text)
                     it.button.background = resources.getDrawable(R.drawable.button_background_on, theme)
-                    Toast.makeText(applicationContext, "Focus mode is turned OFF.", Toast.LENGTH_SHORT).show()
 
                     // Kill floating window
                     stopService(this.windowServiceIntent)
+                    Toast.makeText(applicationContext, "Focus mode is turned OFF.", Toast.LENGTH_SHORT).show()
                 } else {
                     this.focusOn = true
                     it.button.setText(R.string.focus_off_button_text)
@@ -148,6 +164,10 @@ class MainActivity : AppCompatActivity() {
         when (requestCode) {
             REQUEST_ACCOUNTS -> {
                 println("Requested accounts")
+                val accountName = data!!.getStringExtra(AccountManager.KEY_ACCOUNT_NAME)
+                this.updateServiceIntent.putExtra("accountName", accountName)
+                // Turn on a service that keeps updating UI
+                startService(this.updateServiceIntent)
             }
             REQUEST_AUTHORIZATION -> {
                 println("Requested authorization")
