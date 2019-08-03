@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.provider.Settings
+import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
@@ -113,15 +114,21 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onBackPressed() {
+        moveTaskToBack(true)
+    }
+
     override fun onResume() {
         super.onResume()
-        AsyncGetCalendarListTask(this.calendarManager!!).execute()
+        println("Resumed")
     }
 
     override fun onDestroy() {
         super.onDestroy()
         // Stop updating UI
         stopService(this.updateServiceIntent)
+        // Kill floating window
+        stopService(this.windowServiceIntent)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

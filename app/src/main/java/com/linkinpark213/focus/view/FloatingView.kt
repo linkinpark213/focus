@@ -18,7 +18,7 @@ class FloatingView(context: Context) : FrameLayout(context) {
 
     init {
         this.mImageView.setImageResource(R.drawable.ic_launcher_foreground)
-        this.mImageView.setOnTouchListener(OnTouchListener { view, motionEvent ->
+        this.mImageView.setOnTouchListener(OnTouchListener { _, motionEvent ->
             when (motionEvent.action) {
                 MotionEvent.ACTION_DOWN -> {
                     x = motionEvent.rawX
@@ -31,7 +31,6 @@ class FloatingView(context: Context) : FrameLayout(context) {
                     val movedY = (nowY - y)
                     x = nowX
                     y = nowY
-                    println("nowX = $nowX, nowY = $nowY, movedX = $movedX, movedY = $movedY")
                     mParams!!.x = (mParams!!.x + movedX).toInt()
                     mParams!!.y = (mParams!!.y + movedY).toInt()
 
