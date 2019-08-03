@@ -15,22 +15,64 @@ import android.widget.Toast
 import com.google.android.gms.auth.GoogleAuthUtil
 import com.google.android.gms.common.AccountPicker
 import com.google.android.gms.common.GooglePlayServicesUtil
-import com.linkinpark213.focus.task.AsyncGetCalendarListTask
+import com.google.api.client.util.DateTime
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main.view.*
+import kotlinx.android.synthetic.main.activity_main.view.incomingEventTimeTextView
 
 class MainActivity : AppCompatActivity() {
     private var updateServiceIntent: Intent = Intent()
     private var windowServiceIntent: Intent = Intent()
     private var focusOn: Boolean = false
-    private var ongoingEventTextView: TextView? = null
-    private var incomingEventTextView: TextView? = null
     private var mainButton: Button? = null
     private var uiMessageHandler: Handler = Handler {
+        fun formatTimeLeftString(timePeriodMillis: Long): String {
+            var minutesLeft = (timePeriodMillis) / 60000
+            var hoursLeft = minutesLeft / 60
+            var daysLeft = hoursLeft / 24
+            hoursLeft %= 24
+            minutesLeft %= 60
+            var timeLeftString: String = ""
+            if (daysLeft > 0) {
+                timeLeftString += daysLeft
+                timeLeftString += "d "
+            }
+            if (hoursLeft > 0) {
+                timeLeftString += hoursLeft
+                timeLeftString += "h "
+            }
+            timeLeftString += minutesLeft
+            timeLeftString += "min left"
+            return timeLeftString
+        }
         when (it.what) {
             MESSAGE_UPDATE_EVENTS -> {
                 val data: Bundle = it.data.getBundle("data")!!
-                this.ongoingEventTextView!!.text = data.getString("ongoingEventSummary")
-                this.incomingEventTextView!!.text = data.getString("incomingEventSummary")
+                findViewById<TextView>(R.id.ongoingEventTextView).text = data.getString("ongoingEventSummary")
+
+                // Current time and start/end time of ongoing event
+                val currentTime = DateTime(System.currentTimeMillis())
+                val ongoingEventStartTime = data.getLong("ongoingEventStartTime")
+                val ongoingEventEndTime = data.getLong("ongoingEventEndTime")
+                val incomingEventStartTime = data.getLong("incomingEventStartTime")
+                val incomingEventEndTime = data.getLong("incomingEventEndTime")
+                val totalTime = ongoingEventEndTime - ongoingEventStartTime
+                val timeSpent = currentTime.value - ongoingEventStartTime
+
+                // Calculate percentage and length of progress bar
+                val percentage = timeSpent.toFloat() / totalTime.toFloat()
+                val params = findViewById<TextView>(R.id.progress_done).layoutParams
+                params.width = (findViewById<TextView>(R.id.progress_all).width * percentage).toInt()
+                findViewById<TextView>(R.id.progress_done).layoutParams = params
+
+                // Format and update UI
+                findViewById<TextView>(R.id.ongoingEventTimeTextView).text =
+                    formatTimeLeftString(ongoingEventEndTime - currentTime.value)
+
+                findViewById<TextView>(R.id.incomingEventTextView).text = data.getString("incomingEventSummary")
+
+                findViewById<TextView>(R.id.incomingEventTimeTextView).text =
+                    formatTimeLeftString(incomingEventStartTime - currentTime.value)
             }
         }
         return@Handler false
@@ -83,8 +125,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         this.mainButton = findViewById<Button>(R.id.button)
-        this.ongoingEventTextView = findViewById(R.id.ongoingEventTextView)
-        this.incomingEventTextView = findViewById(R.id.incomingEventTextView)
 
         // Turn on a receiver to update UI
         updateIntentFilter.addAction("com.linkinpark213.focus.updateui")

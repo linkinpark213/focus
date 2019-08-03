@@ -36,10 +36,9 @@
                       android:textColor="@color/colorAccent"
             />
         </LinearLayout>
-
         <TextView
                 android:layout_width="match_parent"
-                android:layout_height="36dp"
+                android:layout_height="24dp"
                 android:text="@string/ongoing_text"
                 android:id="@+id/ongoingTextView"
                 android:textSize="20sp"
@@ -47,34 +46,72 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintHorizontal_bias="0.5" app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toTopOf="@+id/button"/>
-        <TextView
-                android:layout_width="match_parent"
-                android:layout_height="36dp"
-                android:text="@string/loading_event_text"
-                android:id="@+id/ongoingEventTextView"
-                android:textSize="20sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintHorizontal_bias="0.5" app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toTopOf="@+id/button"/>
-        <TextView
-                android:layout_width="match_parent"
-                android:layout_height="36dp"
-                android:text="@string/incoming_text"
-                android:id="@+id/incomingTextView"
-                android:textSize="20sp"
-                android:layout_marginTop="20sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" tools:layout_editor_absoluteY="302dp"/>
+
+        <FrameLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+            <TextView android:layout_width="match_parent"
+                      android:layout_height="match_parent"
+                      android:background="@color/colorPrimaryDark"
+                      android:id="@+id/progress_all"
+            />
+            <TextView android:layout_width="0dp"
+                      android:layout_height="match_parent"
+                      android:background="@color/colorPrimary"
+                      android:id="@+id/progress_done"
+            />
+            <LinearLayout android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:orientation="vertical"
+                          android:paddingVertical="6dp"
+                          android:paddingHorizontal="20dp">
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="36dp"
+                        android:text="@string/loading_event_text"
+                        android:id="@+id/ongoingEventTextView"
+                        android:textSize="36sp"
+                        android:textColor="@color/common_signin_btn_dark_text_default"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5" app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toTopOf="@+id/button"/>
+                <TextView android:layout_width="match_parent"
+                          android:layout_height="28dp"
+                          android:textSize="16sp"
+                          android:id="@+id/ongoingEventTimeTextView"
+                          android:textColor="@color/common_signin_btn_dark_text_default"
+                />
+            </LinearLayout>
+        </FrameLayout>
 
         <TextView
                 android:layout_width="match_parent"
-                android:layout_height="36dp"
-                android:text="@string/loading_event_text"
-                android:id="@+id/incomingEventTextView"
+                android:layout_height="24dp"
+                android:layout_marginTop="20sp"
+                android:text="@string/incoming_text"
+                android:id="@+id/incomingTextView"
                 android:textSize="20sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintHorizontal_bias="0.5" app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toTopOf="@+id/button"/>
+                app:layout_constraintEnd_toEndOf="parent" tools:layout_editor_absoluteY="302dp"/>
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:orientation="vertical"
+                      android:paddingVertical="6dp"
+                      android:paddingHorizontal="20dp">
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="36dp"
+                    android:text="@string/loading_event_text"
+                    android:id="@+id/incomingEventTextView"
+                    android:textSize="36sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5" app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toTopOf="@+id/button"
+            />
+            <TextView android:layout_width="match_parent"
+                      android:layout_height="16dp"
+                      android:textSize="16sp"
+                      android:id="@+id/incomingEventTimeTextView"/>
+        </LinearLayout>
+
 
     </LinearLayout>
     <Button
