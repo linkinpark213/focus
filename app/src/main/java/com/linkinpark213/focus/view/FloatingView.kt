@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.PixelFormat
 import android.graphics.drawable.AnimationDrawable
 import android.view.*
+import android.view.animation.BounceInterpolator
 import android.widget.FrameLayout
 import android.widget.ImageView
 import com.linkinpark213.focus.FloatingManager
@@ -17,8 +18,12 @@ class FloatingView(context: Context) : FrameLayout(context) {
     private var mWindowManager = FloatingManager.getInstance(mContext)
     private var mParams: WindowManager.LayoutParams? = null
 
+    companion object {
+        private val outDistance = 240.0F
+    }
+
     init {
-        this.mImageView.setImageResource(R.drawable.normal_in)
+        this.mImageView.setImageResource(R.drawable.normal_full)
         this.mImageView.setOnTouchListener(OnTouchListener { _, motionEvent ->
             when (motionEvent.action) {
                 MotionEvent.ACTION_DOWN -> {
@@ -26,16 +31,23 @@ class FloatingView(context: Context) : FrameLayout(context) {
                     y = motionEvent.rawY
                 }
                 MotionEvent.ACTION_MOVE -> {
-                    val nowX = motionEvent.rawX
+//                    val nowX = motionEvent.rawX
                     val nowY = motionEvent.rawY
-                    val movedX = (nowX - x)
+//                    val movedX = (nowX - x)
                     val movedY = (nowY - y)
-                    x = nowX
+//                    x = nowX
                     y = nowY
-                    mParams!!.x = (mParams!!.x + movedX).toInt()
+//                    mParams!!.x = (mParams!!.x - movedX).toInt()
                     mParams!!.y = (mParams!!.y + movedY).toInt()
 
                     this.mWindowManager.updateView(this.mView, this.mParams!!)
+                }
+                MotionEvent.ACTION_UP -> {
+                    this.mView.animate()
+                        .setInterpolator(BounceInterpolator())
+                        .setDuration(300)
+                        .x(outDistance)
+                        .start()
                 }
             }
             true
@@ -46,17 +58,25 @@ class FloatingView(context: Context) : FrameLayout(context) {
         this.mParams = WindowManager.LayoutParams()
         this.mParams!!.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
         this.mParams!!.format = PixelFormat.RGBA_8888
-        this.mParams!!.gravity = Gravity.LEFT and Gravity.TOP
+        this.mParams!!.gravity = Gravity.END or Gravity.CENTER_VERTICAL
+        this.mParams!!.x = 0
+        this.mParams!!.y = 0
         this.mParams!!.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
                 WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or
                 WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR or
-                WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH
+                WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH or
+                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+
         this.mParams!!.width = ViewGroup.LayoutParams.WRAP_CONTENT
         this.mParams!!.height = ViewGroup.LayoutParams.WRAP_CONTENT
         mWindowManager.addView(this.mView, this.mParams!!)
 
-        val animationDrawable = mImageView.drawable as AnimationDrawable
-        animationDrawable.start()
+//        this.layoutParams.
+        this.mView.animate()
+            .setInterpolator(BounceInterpolator())
+            .setDuration(300)
+            .x(outDistance)
+            .start()
     }
 
     fun hide() {

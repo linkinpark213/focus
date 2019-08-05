@@ -14,7 +14,7 @@ class AsyncGetCalendarListTask(var calendarManager: CalendarManager) : AsyncTask
                 for (calendar in calendars) {
                     if (calendar.summary == "Focus") {
                         calendarManager.focusCalendar = calendar
-                        println("Calendar named \"Focus\" found. The ID is: ${calendarManager.focusCalendar!!.id}")
+//                        println("Calendar named \"Focus\" found. The ID is: ${calendarManager.focusCalendar!!.id}")
                     }
                 }
             }
@@ -28,7 +28,7 @@ class AsyncGetCalendarListTask(var calendarManager: CalendarManager) : AsyncTask
             }
 
             val currentTime = DateTime(System.currentTimeMillis())
-            println("Current time: $currentTime")
+            print("Current time: $currentTime, ")
             val calendar = calendarManager.client!!.calendars().get(calendarManager.focusCalendar!!.id).execute()
             val events = calendarManager.client!!.events()
                 .list(calendar.id)

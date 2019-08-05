@@ -18,12 +18,18 @@
             android:roundIcon="@mipmap/v3"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+                  android:icon="@drawable/v3">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+        </activity>
+        <activity android:name=".FocusReportActivity">
+            <!--<intent-filter>-->
+<!---->
+            <!--</intent-filter>-->
         </activity>
         <service android:name=".service.RealTimeUpdateService">
             <intent-filter>
@@ -33,6 +39,11 @@
         <service android:name=".service.FloatingWindowService">
             <intent-filter>
                 <action android:name="com.linkinpark213.service.WINDOW_SERVICE"/>
+            </intent-filter>
+        </service>
+        <service android:name=".service.UserActivityMonitorService">
+            <intent-filter>
+                <action android:name="com.linkinpark213.service.MONITOR_SERVICE"/>
             </intent-filter>
         </service>
         <receiver android:name=".AlarmReceiver"></receiver>

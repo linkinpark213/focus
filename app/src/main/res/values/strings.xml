@@ -13,4 +13,5 @@
     <string name="greeting_focus_text">You should be working now, right?</string>
     <string name="dot_text">.</string>
     <string name="loading_event_text">Loading</string>
+    <string name="report">Focus Report</string>
 </resources>

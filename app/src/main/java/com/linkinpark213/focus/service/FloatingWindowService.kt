@@ -16,6 +16,7 @@ class FloatingWindowService : Service() {
     companion object {
         const val MESSAGE_WINDOW_ON = 0
         const val MASSAGE_WINDOW_OFF = 1
+        const val MESSAGE_PROMPT_ON = 2
     }
 
     private val windowMessageHandler = Handler {
@@ -32,17 +33,24 @@ class FloatingWindowService : Service() {
                     this.mFloatingView!!.hide()
                 }
             }
+            MESSAGE_PROMPT_ON -> {
+
+            }
         }
         return@Handler false
     }
 
     class WindowUpdateReceiver(private val windowMessageHandler: Handler) : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            val status = intent!!.getBooleanExtra("on", false)
-            if (status)
-                this.windowMessageHandler.sendEmptyMessage(FloatingWindowService.MESSAGE_WINDOW_ON)
-            else
-                this.windowMessageHandler.sendEmptyMessage(FloatingWindowService.MASSAGE_WINDOW_OFF)
+            when (intent!!.action) {
+                "com.linkinpark213.focus.updatewindow" -> {
+                    val status = intent.getBooleanExtra("on", false)
+                    if (status)
+                        this.windowMessageHandler.sendEmptyMessage(FloatingWindowService.MESSAGE_WINDOW_ON)
+                    else
+                        this.windowMessageHandler.sendEmptyMessage(FloatingWindowService.MASSAGE_WINDOW_OFF)
+                }
+            }
         }
     }
 
@@ -50,9 +58,6 @@ class FloatingWindowService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        this.mFloatingView = FloatingView(this)
-        val intentFilter = IntentFilter("com.linkinpark213.focus.updatewindow")
-        registerReceiver(this.broadcastReceiver, intentFilter)
     }
 
     override fun onBind(p0: Intent?): IBinder? {
@@ -60,12 +65,16 @@ class FloatingWindowService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        this.mFloatingView = FloatingView(this)
+        val intentFilter = IntentFilter("com.linkinpark213.focus.updatewindow")
+        registerReceiver(this.broadcastReceiver, intentFilter)
         return super.onStartCommand(intent, flags, startId)
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         this.mFloatingView!!.hide()
+        unregisterReceiver(this.broadcastReceiver)
+        super.onDestroy()
     }
 
 }

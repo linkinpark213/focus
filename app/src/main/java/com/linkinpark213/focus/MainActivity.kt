@@ -22,6 +22,7 @@ import kotlinx.android.synthetic.main.activity_main.view.*
 class MainActivity : AppCompatActivity() {
     private var updateServiceIntent: Intent = Intent()
     private var windowServiceIntent: Intent = Intent()
+    private var monitorServiceIntent: Intent = Intent()
     private var focusOn: Boolean = false
     private var mainButton: Button? = null
     private var uiMessageHandler: Handler = Handler {
@@ -66,7 +67,8 @@ class MainActivity : AppCompatActivity() {
 
                     findViewById<TextView>(R.id.progress_all).setBackgroundColor(resources.getColor(R.color.colorPrimaryDark))
 
-                    doneBarParams.width = (findViewById<TextView>(R.id.progress_all).width.toFloat() * percentage).toInt()
+                    doneBarParams.width =
+                        (findViewById<TextView>(R.id.progress_all).width.toFloat() * percentage).toInt()
 
                     findViewById<TextView>(R.id.progress_done).layoutParams = doneBarParams
                     findViewById<TextView>(R.id.ongoingEventTextView).setTextColor(resources.getColor(R.color.colorWhite))
@@ -128,6 +130,8 @@ class MainActivity : AppCompatActivity() {
         this.windowServiceIntent.`package` = packageName
         this.updateServiceIntent.action = "com.linkinpark213.service.FETCH_EVENTS_SERVICE"
         this.updateServiceIntent.`package` = packageName
+        this.monitorServiceIntent.action = "com.linkinpark213.service.MONITOR_SERVICE"
+        this.monitorServiceIntent.`package` = packageName
 
         if (GooglePlayServicesUtil.isGooglePlayServicesAvailable(applicationContext) == 0) {
             try {
@@ -160,8 +164,11 @@ class MainActivity : AppCompatActivity() {
                     it.button.setText(R.string.focus_on_button_text)
                     it.button.background = resources.getDrawable(R.drawable.button_background_on, theme)
 
-                    // Kill floating window
+                    // Kill floating window service
                     stopService(this.windowServiceIntent)
+                    // Stop monitor
+//                    stopService(this.monitorServiceIntent)
+                    sendBroadcast(Intent("com.linkinpark213.focus.stopmonitor"))
                     Toast.makeText(applicationContext, "Focus mode is turned OFF.", Toast.LENGTH_SHORT).show()
                 } else {
                     this.focusOn = true
@@ -180,7 +187,10 @@ class MainActivity : AppCompatActivity() {
                             REQUEST_WINDOW_OVERLAY
                         )
                     } else {
+                        // Start floating window service
                         startService(this.windowServiceIntent)
+                        // Start activity monitor service
+                        startService(this.monitorServiceIntent)
                         Toast.makeText(applicationContext, "Focus mode is turned ON.", Toast.LENGTH_SHORT).show()
                     }
                 }

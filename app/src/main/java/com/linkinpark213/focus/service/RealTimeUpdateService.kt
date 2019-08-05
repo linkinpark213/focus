@@ -17,7 +17,7 @@ class RealTimeUpdateService : Service() {
     private var accountName: String? = null
 
     companion object {
-        const val interval = 5
+        const val interval = 1
     }
 
     override fun onCreate() {
@@ -81,8 +81,7 @@ class RealTimeUpdateService : Service() {
             else -> 0
         }
 
-        println("Currently ongoing event: $ongoingEventSummary")
-        println("Currently incoming event: $incomingEventSummary")
+        println("Ongoing: $ongoingEventSummary, Incoming: $incomingEventSummary")
 
         val updateUIIntent = Intent()
         updateUIIntent.action = "com.linkinpark213.focus.updateui"
