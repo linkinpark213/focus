@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Message
 import android.provider.Settings
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
@@ -16,9 +17,7 @@ import com.google.android.gms.auth.GoogleAuthUtil
 import com.google.android.gms.common.AccountPicker
 import com.google.android.gms.common.GooglePlayServicesUtil
 import com.google.api.client.util.DateTime
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main.view.*
-import kotlinx.android.synthetic.main.activity_main.view.incomingEventTimeTextView
 
 class MainActivity : AppCompatActivity() {
     private var updateServiceIntent: Intent = Intent()
@@ -42,37 +41,60 @@ class MainActivity : AppCompatActivity() {
                 timeLeftString += "h "
             }
             timeLeftString += minutesLeft
-            timeLeftString += "min left"
+            timeLeftString += "min"
             return timeLeftString
         }
         when (it.what) {
             MESSAGE_UPDATE_EVENTS -> {
+                // Fetch the data from UI message
                 val data: Bundle = it.data.getBundle("data")!!
-                findViewById<TextView>(R.id.ongoingEventTextView).text = data.getString("ongoingEventSummary")
 
                 // Current time and start/end time of ongoing event
                 val currentTime = DateTime(System.currentTimeMillis())
-                val ongoingEventStartTime = data.getLong("ongoingEventStartTime")
-                val ongoingEventEndTime = data.getLong("ongoingEventEndTime")
-                val incomingEventStartTime = data.getLong("incomingEventStartTime")
-                val incomingEventEndTime = data.getLong("incomingEventEndTime")
-                val totalTime = ongoingEventEndTime - ongoingEventStartTime
-                val timeSpent = currentTime.value - ongoingEventStartTime
 
-                // Calculate percentage and length of progress bar
-                val percentage = timeSpent.toFloat() / totalTime.toFloat()
-                val params = findViewById<TextView>(R.id.progress_done).layoutParams
-                params.width = (findViewById<TextView>(R.id.progress_all).width * percentage).toInt()
-                findViewById<TextView>(R.id.progress_done).layoutParams = params
+                // Ongoing event
+                val ongoingEventSummary = data.getString("ongoingEventSummary")
+                findViewById<TextView>(R.id.ongoingEventTextView).text = ongoingEventSummary
+                if (ongoingEventSummary != "None") {
+                    val ongoingEventStartTime = data.getLong("ongoingEventStartTime")
+                    val ongoingEventEndTime = data.getLong("ongoingEventEndTime")
+                    val totalTime = ongoingEventEndTime - ongoingEventStartTime
+                    val timeSpent = currentTime.value - ongoingEventStartTime
+                    // Calculate percentage and length of progress bar
+                    val percentage = timeSpent.toFloat() / totalTime.toFloat()
+                    val doneBarParams = findViewById<TextView>(R.id.progress_done).layoutParams
 
-                // Format and update UI
-                findViewById<TextView>(R.id.ongoingEventTimeTextView).text =
-                    formatTimeLeftString(ongoingEventEndTime - currentTime.value)
+                    findViewById<TextView>(R.id.progress_all).setBackgroundColor(resources.getColor(R.color.colorPrimaryDark))
 
+                    doneBarParams.width = (findViewById<TextView>(R.id.progress_all).width.toFloat() * percentage).toInt()
+
+                    findViewById<TextView>(R.id.progress_done).layoutParams = doneBarParams
+                    findViewById<TextView>(R.id.ongoingEventTextView).setTextColor(resources.getColor(R.color.colorWhite))
+
+                    // Format and update UI
+                    findViewById<TextView>(R.id.ongoingEventTimeTextView).text =
+                        formatTimeLeftString(ongoingEventEndTime - currentTime.value) + " left"
+                } else {
+                    findViewById<TextView>(R.id.progress_all).setBackgroundColor(resources.getColor(R.color.background_material_light))
+                    val doneBarParams = findViewById<TextView>(R.id.progress_done).layoutParams
+                    doneBarParams.width = 0
+                    findViewById<TextView>(R.id.progress_done).layoutParams = doneBarParams
+                    findViewById<TextView>(R.id.ongoingEventTextView).setTextColor(resources.getColor(R.color.abc_secondary_text_material_light))
+                    findViewById<TextView>(R.id.ongoingEventTimeTextView).text = ""
+                }
+
+                // Incoming event
+                val incomingEventSummary = data.getString("incomingEventSummary")
                 findViewById<TextView>(R.id.incomingEventTextView).text = data.getString("incomingEventSummary")
+                if (incomingEventSummary != "None") {
+                    val incomingEventStartTime = data.getLong("incomingEventStartTime")
+                    val incomingEventEndTime = data.getLong("incomingEventEndTime")
+                    findViewById<TextView>(R.id.incomingEventTimeTextView).text =
+                        formatTimeLeftString(incomingEventStartTime - currentTime.value) + " later"
+                } else {
+                    findViewById<TextView>(R.id.incomingEventTimeTextView).text = ""
+                }
 
-                findViewById<TextView>(R.id.incomingEventTimeTextView).text =
-                    formatTimeLeftString(incomingEventStartTime - currentTime.value)
             }
         }
         return@Handler false

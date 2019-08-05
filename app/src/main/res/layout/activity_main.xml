@@ -19,7 +19,7 @@
                   android:text="@string/before_clock_text"
                   android:textSize="20sp"
         />
-        <LinearLayout android:layout_width="match_parent" android:layout_height="60sp">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content">
             <TextClock
                     android:id="@+id/mainClock"
                     android:gravity="center"
@@ -38,7 +38,7 @@
         </LinearLayout>
         <TextView
                 android:layout_width="match_parent"
-                android:layout_height="24dp"
+                android:layout_height="wrap_content"
                 android:text="@string/ongoing_text"
                 android:id="@+id/ongoingTextView"
                 android:textSize="20sp"
@@ -65,7 +65,7 @@
                           android:paddingHorizontal="20dp">
                 <TextView
                         android:layout_width="match_parent"
-                        android:layout_height="36dp"
+                        android:layout_height="wrap_content"
                         android:text="@string/loading_event_text"
                         android:id="@+id/ongoingEventTextView"
                         android:textSize="36sp"
@@ -74,7 +74,7 @@
                         app:layout_constraintHorizontal_bias="0.5" app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toTopOf="@+id/button"/>
                 <TextView android:layout_width="match_parent"
-                          android:layout_height="28dp"
+                          android:layout_height="wrap_content"
                           android:textSize="16sp"
                           android:id="@+id/ongoingEventTimeTextView"
                           android:textColor="@color/common_signin_btn_dark_text_default"
@@ -84,7 +84,7 @@
 
         <TextView
                 android:layout_width="match_parent"
-                android:layout_height="24dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="20sp"
                 android:text="@string/incoming_text"
                 android:id="@+id/incomingTextView"
@@ -98,16 +98,13 @@
                       android:paddingHorizontal="20dp">
             <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="36dp"
+                    android:layout_height="wrap_content"
                     android:text="@string/loading_event_text"
-                    android:id="@+id/incomingEventTextView"
                     android:textSize="36sp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5" app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toTopOf="@+id/button"
+                    android:id="@+id/incomingEventTextView"
             />
             <TextView android:layout_width="match_parent"
-                      android:layout_height="16dp"
+                      android:layout_height="wrap_content"
                       android:textSize="16sp"
                       android:id="@+id/incomingEventTimeTextView"/>
         </LinearLayout>

@@ -4,6 +4,7 @@ import android.os.AsyncTask
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException
 import com.google.api.client.util.DateTime
 import com.linkinpark213.focus.CalendarManager
+import java.lang.Exception
 
 class AsyncGetCalendarListTask(var calendarManager: CalendarManager) : AsyncTask<Void, Void, String>() {
     override fun doInBackground(vararg params: Void?): String? {
@@ -50,9 +51,12 @@ class AsyncGetCalendarListTask(var calendarManager: CalendarManager) : AsyncTask
                         calendarManager.incomingEvent = null
                     }
                 }
+            } else {
+                calendarManager.ongoingEvent = null
+                calendarManager.incomingEvent = null
             }
 
-        } catch (e: UserRecoverableAuthIOException) {
+        } catch (e: Exception) {
             e.printStackTrace()
         }
         return ""
