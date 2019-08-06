@@ -14,7 +14,7 @@ class AsyncGetCalendarListTask(var calendarManager: CalendarManager) : AsyncTask
                 for (calendar in calendars) {
                     if (calendar.summary == "Focus") {
                         calendarManager.focusCalendar = calendar
-//                        println("Calendar named \"Focus\" found. The ID is: ${calendarManager.focusCalendar!!.id}")
+                        println("Calendar named \"Focus\" found. The ID is: ${calendarManager.focusCalendar!!.id}")
                     }
                 }
             }

@@ -67,7 +67,11 @@ class UserActivityMonitorService : Service() {
                 }
                 val reportIntent = Intent(baseContext, FocusReportActivity::class.java)
                 reportIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-//                application.startActivity(reportIntent)
+                reportIntent.putExtra("focusStartTime", this.focusStartTime)
+                reportIntent.putExtra("focusEndTime", this.focusEndTime)
+                reportIntent.putExtra("backOnTrackTimes", this.backOnTrackTimes.toLongArray())
+                reportIntent.putExtra("offTrackTimes", this.offTrackTimes.toLongArray())
+                application.startActivity(reportIntent)
                 stopSelf()
             }
         }

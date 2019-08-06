@@ -17,7 +17,7 @@ class RealTimeUpdateService : Service() {
     private var accountName: String? = null
 
     companion object {
-        const val interval = 1
+        const val interval = 5
     }
 
     override fun onCreate() {

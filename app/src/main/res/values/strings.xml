@@ -13,5 +13,11 @@
     <string name="greeting_focus_text">You should be working now, right?</string>
     <string name="dot_text">.</string>
     <string name="loading_event_text">Loading</string>
-    <string name="report">Focus Report</string>
+    <string name="report_text">Focus Report</string>
+    <string name="report_start_text">You have been focusing for</string>
+    <string name="report_bar_text">Time distribution of your focus</string>
+    <string name="report_start_time_text">, starting from</string>
+    <string name="report_end_time_text">and ending at</string>
+    <string name="report_time_awaken_text">Time you awakened your phone</string>
+    <string name="report_time_offtrack_text">Total time spent on phone</string>
 </resources>

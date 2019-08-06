@@ -9,7 +9,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Message
 import android.provider.Settings
-import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
@@ -17,6 +16,7 @@ import com.google.android.gms.auth.GoogleAuthUtil
 import com.google.android.gms.common.AccountPicker
 import com.google.android.gms.common.GooglePlayServicesUtil
 import com.google.api.client.util.DateTime
+import com.linkinpark213.focus.util.TimeFormatter
 import kotlinx.android.synthetic.main.activity_main.view.*
 
 class MainActivity : AppCompatActivity() {
@@ -26,25 +26,6 @@ class MainActivity : AppCompatActivity() {
     private var focusOn: Boolean = false
     private var mainButton: Button? = null
     private var uiMessageHandler: Handler = Handler {
-        fun formatTimeLeftString(timePeriodMillis: Long): String {
-            var minutesLeft = (timePeriodMillis) / 60000
-            var hoursLeft = minutesLeft / 60
-            var daysLeft = hoursLeft / 24
-            hoursLeft %= 24
-            minutesLeft %= 60
-            var timeLeftString: String = ""
-            if (daysLeft > 0) {
-                timeLeftString += daysLeft
-                timeLeftString += "d "
-            }
-            if (hoursLeft > 0) {
-                timeLeftString += hoursLeft
-                timeLeftString += "h "
-            }
-            timeLeftString += minutesLeft
-            timeLeftString += "min"
-            return timeLeftString
-        }
         when (it.what) {
             MESSAGE_UPDATE_EVENTS -> {
                 // Fetch the data from UI message
@@ -75,7 +56,7 @@ class MainActivity : AppCompatActivity() {
 
                     // Format and update UI
                     findViewById<TextView>(R.id.ongoingEventTimeTextView).text =
-                        formatTimeLeftString(ongoingEventEndTime - currentTime.value) + " left"
+                        TimeFormatter.formatTimePeriod(ongoingEventEndTime - currentTime.value) + " left"
                 } else {
                     findViewById<TextView>(R.id.progress_all).setBackgroundColor(resources.getColor(R.color.background_material_light))
                     val doneBarParams = findViewById<TextView>(R.id.progress_done).layoutParams
@@ -92,7 +73,7 @@ class MainActivity : AppCompatActivity() {
                     val incomingEventStartTime = data.getLong("incomingEventStartTime")
                     val incomingEventEndTime = data.getLong("incomingEventEndTime")
                     findViewById<TextView>(R.id.incomingEventTimeTextView).text =
-                        formatTimeLeftString(incomingEventStartTime - currentTime.value) + " later"
+                        TimeFormatter.formatTimePeriod(incomingEventStartTime - currentTime.value) + " later"
                 } else {
                     findViewById<TextView>(R.id.incomingEventTimeTextView).text = ""
                 }

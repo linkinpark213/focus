@@ -30,7 +30,6 @@
             />
             <TextView android:layout_width="10sp"
                       android:layout_height="match_parent"
-                      android:layout_marginBottom="0dp"
                       android:textSize="50sp"
                       android:text="@string/dot_text"
                       android:textColor="@color/colorAccent"
@@ -88,12 +87,18 @@
             </LinearLayout>
         </FrameLayout>
 
+        <Space
+                android:layout_width="match_parent"
+                android:layout_height="20dp" android:layout_weight="1"/>
         <View
                 android:id="@+id/divider"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="?android:attr/listDivider"
         />
+        <Space
+                android:layout_width="match_parent"
+                android:layout_height="20dp" android:layout_weight="1"/>
         <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -119,21 +124,15 @@
                       android:layout_height="wrap_content"
                       android:textSize="16sp"
                       android:id="@+id/incomingEventTimeTextView"/>
-            <View
-                    android:id="@+id/divider2"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="?android:attr/listDivider"
-            />
-            <View
-                    android:id="@+id/divider4"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="?android:attr/listDivider"
-            />
         </LinearLayout>
 
-
+        <View
+                android:id="@+id/divider2"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider"
+                tools:layout_editor_absoluteX="50dp"
+                app:layout_constraintTop_toBottomOf="@+id/incomingTextView"/>
     </LinearLayout>
     <Button
             android:text="@string/focus_on_button_text"
