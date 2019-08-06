@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity() {
 
                     // Format and update UI
                     findViewById<TextView>(R.id.ongoingEventTimeTextView).text =
-                        TimeFormatter.formatTimePeriod(ongoingEventEndTime - currentTime.value) + " left"
+                        TimeFormatter.formatTimePeriodDHM(ongoingEventEndTime - currentTime.value) + " left"
                 } else {
                     findViewById<TextView>(R.id.progress_all).setBackgroundColor(resources.getColor(R.color.background_material_light))
                     val doneBarParams = findViewById<TextView>(R.id.progress_done).layoutParams
@@ -73,7 +73,7 @@ class MainActivity : AppCompatActivity() {
                     val incomingEventStartTime = data.getLong("incomingEventStartTime")
                     val incomingEventEndTime = data.getLong("incomingEventEndTime")
                     findViewById<TextView>(R.id.incomingEventTimeTextView).text =
-                        TimeFormatter.formatTimePeriod(incomingEventStartTime - currentTime.value) + " later"
+                        TimeFormatter.formatTimePeriodDHM(incomingEventStartTime - currentTime.value) + " later"
                 } else {
                     findViewById<TextView>(R.id.incomingEventTimeTextView).text = ""
                 }
