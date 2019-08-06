@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Handler
 import android.os.IBinder
+import android.os.Message
 import com.linkinpark213.focus.view.FloatingView
 
 class FloatingWindowService : Service() {
@@ -34,7 +35,9 @@ class FloatingWindowService : Service() {
                 }
             }
             MESSAGE_PROMPT_ON -> {
-
+                if (this.on) {
+                    this.mFloatingView!!.pop()
+                }
             }
         }
         return@Handler false

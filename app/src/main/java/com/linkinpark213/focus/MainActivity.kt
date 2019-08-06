@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Message
 import android.provider.Settings
+import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
@@ -17,6 +18,8 @@ import com.google.android.gms.common.AccountPicker
 import com.google.android.gms.common.GooglePlayServicesUtil
 import com.google.api.client.util.DateTime
 import com.linkinpark213.focus.util.TimeFormatter
+import com.wang.avi.AVLoadingIndicatorView
+import com.wang.avi.Indicator
 import kotlinx.android.synthetic.main.activity_main.view.*
 
 class MainActivity : AppCompatActivity() {
@@ -36,6 +39,11 @@ class MainActivity : AppCompatActivity() {
 
                 // Ongoing event
                 val ongoingEventSummary = data.getString("ongoingEventSummary")
+
+                // Clear loading state
+                findViewById<AVLoadingIndicatorView>(R.id.loadingAnimation).hide()
+                findViewById<View>(R.id.loadingDarkCurtain).visibility = View.INVISIBLE
+
                 findViewById<TextView>(R.id.ongoingEventTextView).text = ongoingEventSummary
                 if (ongoingEventSummary != "None") {
                     val ongoingEventStartTime = data.getLong("ongoingEventStartTime")

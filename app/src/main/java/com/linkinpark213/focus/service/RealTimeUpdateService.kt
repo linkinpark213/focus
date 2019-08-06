@@ -41,7 +41,8 @@ class RealTimeUpdateService : Service() {
         AsyncGetCalendarListTask(this.calendarManager!!).execute()
 
         // Send request to update MainActivity UI
-        updateMainUI()
+        if (calendarManager!!.initialized)
+            updateMainUI()
 
         // Send request to update Floating Window
         updateFloatingWindow()

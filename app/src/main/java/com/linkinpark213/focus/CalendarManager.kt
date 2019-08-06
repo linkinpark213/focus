@@ -19,6 +19,7 @@ class CalendarManager(
     var focusCalendar: CalendarListEntry? = null
     var ongoingEvent: Event? = null
     var incomingEvent: Event? = null
+    var initialized: Boolean = false
 
     init {
         this.credential = GoogleAccountCredential.usingOAuth2(

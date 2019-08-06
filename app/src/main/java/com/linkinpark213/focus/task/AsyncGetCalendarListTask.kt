@@ -55,7 +55,7 @@ class AsyncGetCalendarListTask(var calendarManager: CalendarManager) : AsyncTask
                 calendarManager.ongoingEvent = null
                 calendarManager.incomingEvent = null
             }
-
+            calendarManager.initialized = true
         } catch (e: Exception) {
             e.printStackTrace()
         }

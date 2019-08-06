@@ -2,7 +2,6 @@ package com.linkinpark213.focus.view
 
 import android.content.Context
 import android.graphics.PixelFormat
-import android.graphics.drawable.AnimationDrawable
 import android.view.*
 import android.view.animation.BounceInterpolator
 import android.widget.FrameLayout
@@ -19,7 +18,8 @@ class FloatingView(context: Context) : FrameLayout(context) {
     private var mParams: WindowManager.LayoutParams? = null
 
     companion object {
-        private val outDistance = 240.0F
+        private val edgeDistance = 240.0F
+        private val mostInDistance = 100.0F
     }
 
     init {
@@ -46,7 +46,7 @@ class FloatingView(context: Context) : FrameLayout(context) {
                     this.mView.animate()
                         .setInterpolator(BounceInterpolator())
                         .setDuration(300)
-                        .x(outDistance)
+                        .x(edgeDistance)
                         .start()
                 }
             }
@@ -71,11 +71,18 @@ class FloatingView(context: Context) : FrameLayout(context) {
         this.mParams!!.height = ViewGroup.LayoutParams.WRAP_CONTENT
         mWindowManager.addView(this.mView, this.mParams!!)
 
-//        this.layoutParams.
         this.mView.animate()
             .setInterpolator(BounceInterpolator())
             .setDuration(300)
-            .x(outDistance)
+            .x(edgeDistance)
+            .start()
+    }
+
+    fun pop() {
+        this.mView.animate()
+            .setInterpolator(BounceInterpolator())
+            .setDuration(300)
+            .x(mostInDistance)
             .start()
     }
 
