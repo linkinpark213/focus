@@ -88,7 +88,7 @@ class FocusReportActivity() : Activity() {
         findViewById<TextView>(R.id.reportEndTimeValueTextView).text = TimeFormatter.formatAbsoluteTime(focusEndTime)
         findViewById<TextView>(R.id.reportTimeAwakenCountValueTextView).text = (offTrackTimes.size - 1).toString()
         findViewById<TextView>(R.id.reportTimeAwakenAmountValueTextView).text =
-            TimeFormatter.formatTimePeriodDHMS(awakenTime) + " (" + (awakenTime.toFloat() / totalTime.toFloat() * 100.0F).toString() + "%)"
+            TimeFormatter.formatTimePeriodDHMS(awakenTime) + " (" + "%.2f".format(awakenTime.toFloat() / totalTime.toFloat() * 100.0F) + "%)"
 
     }
 }
