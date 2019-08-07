@@ -7,10 +7,8 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Handler
 import android.os.IBinder
-import android.os.Message
-import com.linkinpark213.focus.FocusReportActivity
+import com.linkinpark213.focus.ReportActivity
 import com.linkinpark213.focus.view.FloatingView
-import java.util.*
 import kotlin.collections.ArrayList
 
 class UserActivityMonitorService : Service() {
@@ -69,7 +67,7 @@ class UserActivityMonitorService : Service() {
                 for (time in this.backOnTrackTimes) {
                     println(time)
                 }
-                val reportIntent = Intent(baseContext, FocusReportActivity::class.java)
+                val reportIntent = Intent(baseContext, ReportActivity::class.java)
                 reportIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 reportIntent.putExtra("focusStartTime", this.focusStartTime)
                 reportIntent.putExtra("focusEndTime", this.focusEndTime)

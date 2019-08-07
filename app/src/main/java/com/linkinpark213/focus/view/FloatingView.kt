@@ -6,10 +6,7 @@ import android.view.*
 import android.view.animation.BounceInterpolator
 import android.widget.FrameLayout
 import android.widget.ImageView
-import android.widget.TextView
-import com.linkinpark213.focus.FloatingManager
 import com.linkinpark213.focus.R
-import kotlinx.android.synthetic.main.floating_view.view.*
 
 class FloatingView(context: Context) : FrameLayout(context) {
     private var mContext: Context = context.applicationContext

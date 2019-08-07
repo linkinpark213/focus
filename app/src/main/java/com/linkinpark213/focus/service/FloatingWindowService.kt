@@ -17,7 +17,7 @@ class FloatingWindowService : Service() {
     companion object {
         const val MESSAGE_WINDOW_ON = 0
         const val MASSAGE_WINDOW_OFF = 1
-        const val MESSAGE_PROMPT_ON = 2
+        const val MESSAGE_WINDOW_POP = 2
         const val MESSAGE_CHANGE_EMOICON = 3
     }
 
@@ -35,7 +35,7 @@ class FloatingWindowService : Service() {
                     this.mFloatingView!!.hide()
                 }
             }
-            MESSAGE_PROMPT_ON -> {
+            MESSAGE_WINDOW_POP -> {
                 if (this.on) {
                     this.mFloatingView!!.pop()
                 }
@@ -68,7 +68,7 @@ class FloatingWindowService : Service() {
                     this.windowMessageHandler.sendMessage(emoIconMessage)
                     if (prompt) {
                         val promptMessage = Message()
-                        promptMessage.what = FloatingWindowService.MESSAGE_PROMPT_ON
+                        promptMessage.what = FloatingWindowService.MESSAGE_WINDOW_POP
                         promptMessage.data.putInt("level", level)
                         this.windowMessageHandler.sendMessage(promptMessage)
                     }

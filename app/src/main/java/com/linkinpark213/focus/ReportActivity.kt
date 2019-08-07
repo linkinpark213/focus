@@ -10,7 +10,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.linkinpark213.focus.util.TimeFormatter
 
-class FocusReportActivity() : Activity() {
+class ReportActivity() : Activity() {
     class MySurfaceHolderCallback(private val timePeriods: ArrayList<Long>, private val totalTime: Long) :
         SurfaceHolder.Callback {
         override fun surfaceCreated(holder: SurfaceHolder?) {

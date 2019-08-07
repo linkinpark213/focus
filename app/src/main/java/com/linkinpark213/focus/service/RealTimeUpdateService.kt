@@ -6,10 +6,9 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.IBinder
-import android.os.Message
 import android.os.SystemClock
-import com.linkinpark213.focus.AlarmReceiver
-import com.linkinpark213.focus.CalendarManager
+import com.linkinpark213.focus.util.AlarmReceiver
+import com.linkinpark213.focus.calendar.CalendarManager
 import com.linkinpark213.focus.task.AsyncGetCalendarListTask
 
 class RealTimeUpdateService : Service() {

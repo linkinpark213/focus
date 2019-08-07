@@ -1,4 +1,4 @@
-package com.linkinpark213.focus
+package com.linkinpark213.focus.view
 
 import android.content.Context
 import android.view.View
@@ -18,7 +18,8 @@ class FloatingManager {
         var mInstance: FloatingManager? = null
         fun getInstance(context: Context): FloatingManager {
             if (mInstance == null) {
-                mInstance = FloatingManager(context)
+                mInstance =
+                    FloatingManager(context)
             }
             return mInstance as FloatingManager
         }

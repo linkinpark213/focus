@@ -1,9 +1,8 @@
 package com.linkinpark213.focus.task
 
 import android.os.AsyncTask
-import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException
 import com.google.api.client.util.DateTime
-import com.linkinpark213.focus.CalendarManager
+import com.linkinpark213.focus.calendar.CalendarManager
 import java.lang.Exception
 
 class AsyncGetCalendarListTask(var calendarManager: CalendarManager) : AsyncTask<Void, Void, String>() {

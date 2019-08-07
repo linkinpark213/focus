@@ -27,7 +27,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".FocusReportActivity"
+        <activity android:name=".ReportActivity"
                   android:screenOrientation="portrait">
             <!--<intent-filter>-->
             <!---->
@@ -48,7 +48,7 @@
                 <action android:name="com.linkinpark213.service.MONITOR_SERVICE"/>
             </intent-filter>
         </service>
-        <receiver android:name=".AlarmReceiver"></receiver>
+        <receiver android:name=".util.AlarmReceiver"></receiver>
     </application>
 
 

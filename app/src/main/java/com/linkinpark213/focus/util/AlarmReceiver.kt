@@ -1,4 +1,4 @@
-package com.linkinpark213.focus
+package com.linkinpark213.focus.util
 
 import android.content.BroadcastReceiver
 import android.content.Context
