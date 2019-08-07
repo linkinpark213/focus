@@ -3,6 +3,7 @@ package com.linkinpark213.focus
 import android.accounts.AccountManager
 import android.app.Activity
 import android.content.*
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -135,6 +136,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         }
 
         this.mainButton = findViewById<Button>(R.id.button)
+        this.ongoingBar = findViewById(R.id.ongoingEventBar)
+        this.incomingBar = findViewById(R.id.incomingEventBar)
 
         // Turn on a receiver to update UI
         updateIntentFilter.addAction("com.linkinpark213.focus.updateui")
@@ -142,6 +145,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
         // EventListeners
         this.mainButton!!.setOnClickListener(this)
+        this.ongoingBar!!.setOnClickListener(this)
+        this.incomingBar!!.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
@@ -183,6 +188,39 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                     }
                 }
             }
+            this.ongoingBar -> {
+                launchApp("com.google.android.calendar")
+            }
+            this.incomingBar -> {
+                launchApp("com.google.android.calendar")
+            }
+        }
+    }
+
+    private fun isAppInstalled(appPackageName: String): Boolean {
+        return try {
+            applicationContext.packageManager.getPackageInfo(appPackageName, 0);
+            true;
+        } catch (e: PackageManager.NameNotFoundException) {
+            false;
+        }
+    }
+
+    private fun goToMarket(appPackageName: String) {
+        val uri = Uri.parse("market://details?id=$packageName");
+        val goToMarket = Intent(Intent.ACTION_VIEW, uri);
+        applicationContext.startActivity(goToMarket);
+    }
+
+    private fun launchApp(appPackageName: String) {
+        if (isAppInstalled(appPackageName)) {
+            applicationContext.startActivity(
+                applicationContext.packageManager.getLaunchIntentForPackage(
+                    appPackageName
+                )
+            );
+        } else {
+            goToMarket(appPackageName);
         }
     }
 
