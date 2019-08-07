@@ -3,9 +3,10 @@
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:background="@android:color/transparent"
-                android:gravity="end|right">
+                android:gravity="end">
     <ImageView android:id="@+id/floatingImageView"
                android:layout_width="wrap_content"
                android:layout_height="wrap_content"
-               android:src="@drawable/normal_full"/>
+               android:src="@drawable/normal_full"
+               android:contentDescription="@string/focus_prompt"/>
 </RelativeLayout>

@@ -6,8 +6,10 @@ import android.view.*
 import android.view.animation.BounceInterpolator
 import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.TextView
 import com.linkinpark213.focus.FloatingManager
 import com.linkinpark213.focus.R
+import kotlinx.android.synthetic.main.floating_view.view.*
 
 class FloatingView(context: Context) : FrameLayout(context) {
     private var mContext: Context = context.applicationContext
@@ -36,13 +38,9 @@ class FloatingView(context: Context) : FrameLayout(context) {
                     pop()
                 }
                 MotionEvent.ACTION_MOVE -> {
-//                    val nowX = motionEvent.rawX
                     val nowY = motionEvent.rawY
-//                    val movedX = (nowX - x)
                     val movedY = (nowY - y)
-//                    x = nowX
                     y = nowY
-//                    mParams!!.x = (mParams!!.x - movedX).toInt()
                     mParams!!.y = (mParams!!.y + movedY).toInt()
 
                     this.mWindowManager.updateView(this.mView, this.mParams!!)
@@ -83,6 +81,7 @@ class FloatingView(context: Context) : FrameLayout(context) {
         this.mView.animate()
             .setInterpolator(BounceInterpolator())
             .setDuration(300)
+            .rotation(-30.0F)
             .x(mostInDistance)
             .start()
         this.pulledOver = false
@@ -92,6 +91,7 @@ class FloatingView(context: Context) : FrameLayout(context) {
         this.mView.animate()
             .setInterpolator(BounceInterpolator())
             .setDuration(300)
+            .rotation(0.0F)
             .x(edgeDistance)
             .start()
         this.pulledOver = true
@@ -102,7 +102,6 @@ class FloatingView(context: Context) : FrameLayout(context) {
     }
 
     fun changeEmoIcon(level: Int) {
-        println("==============CHANGE EMOICON==============")
         println("LEVEL: $level")
         when (level) {
             LEVEL_NORMAL -> {
