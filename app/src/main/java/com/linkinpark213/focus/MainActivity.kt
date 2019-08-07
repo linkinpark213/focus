@@ -61,6 +61,7 @@ class MainActivity : AppCompatActivity() {
 
                     findViewById<TextView>(R.id.progress_done).layoutParams = doneBarParams
                     findViewById<TextView>(R.id.ongoingEventTextView).setTextColor(resources.getColor(R.color.colorWhite))
+                    findViewById<TextView>(R.id.ongoingEventTimeTextView).setTextColor(resources.getColor(R.color.colorWhite))
 
                     // Format and update UI
                     findViewById<TextView>(R.id.ongoingEventTimeTextView).text =
@@ -156,8 +157,8 @@ class MainActivity : AppCompatActivity() {
                     // Kill floating window service
                     stopService(this.windowServiceIntent)
                     // Stop monitor
-//                    stopService(this.monitorServiceIntent)
                     sendBroadcast(Intent("com.linkinpark213.focus.stopmonitor"))
+                    stopService(this.monitorServiceIntent)
                     Toast.makeText(applicationContext, "Focus mode is turned OFF.", Toast.LENGTH_SHORT).show()
                 } else {
                     this.focusOn = true

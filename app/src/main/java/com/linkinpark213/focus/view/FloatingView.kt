@@ -16,10 +16,14 @@ class FloatingView(context: Context) : FrameLayout(context) {
     private var mImageView = mView.findViewById<ImageView>(R.id.floatingImageView)
     private var mWindowManager = FloatingManager.getInstance(mContext)
     private var mParams: WindowManager.LayoutParams? = null
+    private var pulledOver: Boolean = true
 
     companion object {
         private val edgeDistance = 240.0F
         private val mostInDistance = 100.0F
+        const val LEVEL_NORMAL = 0
+        const val LEVEL_MEDIUM = 1
+        const val LEVEL_HIGH = 2
     }
 
     init {
@@ -29,6 +33,7 @@ class FloatingView(context: Context) : FrameLayout(context) {
                 MotionEvent.ACTION_DOWN -> {
                     x = motionEvent.rawX
                     y = motionEvent.rawY
+                    pop()
                 }
                 MotionEvent.ACTION_MOVE -> {
 //                    val nowX = motionEvent.rawX
@@ -43,11 +48,11 @@ class FloatingView(context: Context) : FrameLayout(context) {
                     this.mWindowManager.updateView(this.mView, this.mParams!!)
                 }
                 MotionEvent.ACTION_UP -> {
-                    this.mView.animate()
-                        .setInterpolator(BounceInterpolator())
-                        .setDuration(300)
-                        .x(edgeDistance)
-                        .start()
+                    if (pulledOver) {
+                        pop()
+                    } else {
+                        pull()
+                    }
                 }
             }
             true
@@ -71,11 +76,7 @@ class FloatingView(context: Context) : FrameLayout(context) {
         this.mParams!!.height = ViewGroup.LayoutParams.WRAP_CONTENT
         mWindowManager.addView(this.mView, this.mParams!!)
 
-        this.mView.animate()
-            .setInterpolator(BounceInterpolator())
-            .setDuration(300)
-            .x(edgeDistance)
-            .start()
+        this.pull()
     }
 
     fun pop() {
@@ -84,10 +85,36 @@ class FloatingView(context: Context) : FrameLayout(context) {
             .setDuration(300)
             .x(mostInDistance)
             .start()
+        this.pulledOver = false
+    }
+
+    fun pull() {
+        this.mView.animate()
+            .setInterpolator(BounceInterpolator())
+            .setDuration(300)
+            .x(edgeDistance)
+            .start()
+        this.pulledOver = true
     }
 
     fun hide() {
         this.mWindowManager.removeView(this.mView)
+    }
+
+    fun changeEmoIcon(level: Int) {
+        println("==============CHANGE EMOICON==============")
+        println("LEVEL: $level")
+        when (level) {
+            LEVEL_NORMAL -> {
+                this.mImageView.setImageResource(R.drawable.normal_full)
+            }
+            LEVEL_MEDIUM -> {
+                this.mImageView.setImageResource(R.drawable.angry_full)
+            }
+            LEVEL_HIGH -> {
+                this.mImageView.setImageResource(R.drawable.shotgun_full)
+            }
+        }
     }
 
 }

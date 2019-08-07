@@ -9,6 +9,7 @@ import android.os.Handler
 import android.os.IBinder
 import android.os.Message
 import com.linkinpark213.focus.FocusReportActivity
+import com.linkinpark213.focus.view.FloatingView
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -43,6 +44,16 @@ class UserActivityMonitorService : Service() {
             }
             MESSAGE_PAUSE -> {
                 this.offTrackTimes.add(System.currentTimeMillis())
+                val intent = Intent("com.linkinpark213.focus.updatewindow")
+                intent.putExtra(
+                    "level", when {
+                        offTrackTimes.size > 5 -> FloatingView.LEVEL_HIGH
+                        offTrackTimes.size > 2 -> FloatingView.LEVEL_MEDIUM
+                        else -> FloatingView.LEVEL_NORMAL
+                    }
+                )
+                intent.putExtra("prompt", true)
+                sendBroadcast(intent)
             }
             MESSAGE_CONTINUE -> {
                 this.backOnTrackTimes.add(System.currentTimeMillis())
@@ -57,13 +68,6 @@ class UserActivityMonitorService : Service() {
                 println("Back-on-track times:")
                 for (time in this.backOnTrackTimes) {
                     println(time)
-                }
-                // Calculate total focus time
-                val totalFocusTime = System.currentTimeMillis() - this.focusStartTime
-                if (offTrackTimes.size > backOnTrackTimes.size) {
-
-                } else {
-
                 }
                 val reportIntent = Intent(baseContext, FocusReportActivity::class.java)
                 reportIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -83,15 +87,15 @@ class UserActivityMonitorService : Service() {
             when (intent!!.action) {
                 "com.linkinpark213.focus.stopmonitor" -> {
                     windowMessageHandler.sendEmptyMessage(MESSAGE_STOP)
-                    println("Monitor Stopped!")
+                    println("Monitor: Stopped monitor.")
                 }
                 Intent.ACTION_SCREEN_OFF -> {
                     windowMessageHandler.sendEmptyMessage(MESSAGE_CONTINUE)
-                    println("User turned off screen!")
+                    println("Monitor: User turned off screen.")
                 }
                 Intent.ACTION_USER_PRESENT -> {
                     windowMessageHandler.sendEmptyMessage(MESSAGE_PAUSE)
-                    println("User is active!")
+                    println("Monitor: User is active.")
                 }
             }
         }

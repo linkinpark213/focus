@@ -18,6 +18,7 @@ class FloatingWindowService : Service() {
         const val MESSAGE_WINDOW_ON = 0
         const val MASSAGE_WINDOW_OFF = 1
         const val MESSAGE_PROMPT_ON = 2
+        const val MESSAGE_CHANGE_EMOICON = 3
     }
 
     private val windowMessageHandler = Handler {
@@ -39,6 +40,11 @@ class FloatingWindowService : Service() {
                     this.mFloatingView!!.pop()
                 }
             }
+            MESSAGE_CHANGE_EMOICON -> {
+                if (this.on) {
+                    this.mFloatingView!!.changeEmoIcon(it.data.getInt("level"))
+                }
+            }
         }
         return@Handler false
     }
@@ -46,12 +52,26 @@ class FloatingWindowService : Service() {
     class WindowUpdateReceiver(private val windowMessageHandler: Handler) : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             when (intent!!.action) {
-                "com.linkinpark213.focus.updatewindow" -> {
+                "com.linkinpark213.focus.triggerwindow" -> {
                     val status = intent.getBooleanExtra("on", false)
                     if (status)
                         this.windowMessageHandler.sendEmptyMessage(FloatingWindowService.MESSAGE_WINDOW_ON)
                     else
                         this.windowMessageHandler.sendEmptyMessage(FloatingWindowService.MASSAGE_WINDOW_OFF)
+                }
+                "com.linkinpark213.focus.updatewindow" -> {
+                    val level = intent.getIntExtra("level", 0)
+                    val prompt = intent.getBooleanExtra("prompt", false)
+                    val emoIconMessage = Message()
+                    emoIconMessage.what = FloatingWindowService.MESSAGE_CHANGE_EMOICON
+                    emoIconMessage.data.putInt("level", level)
+                    this.windowMessageHandler.sendMessage(emoIconMessage)
+                    if (prompt) {
+                        val promptMessage = Message()
+                        promptMessage.what = FloatingWindowService.MESSAGE_PROMPT_ON
+                        promptMessage.data.putInt("level", level)
+                        this.windowMessageHandler.sendMessage(promptMessage)
+                    }
                 }
             }
         }
@@ -69,7 +89,8 @@ class FloatingWindowService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         this.mFloatingView = FloatingView(this)
-        val intentFilter = IntentFilter("com.linkinpark213.focus.updatewindow")
+        val intentFilter = IntentFilter("com.linkinpark213.focus.triggerwindow")
+        intentFilter.addAction("com.linkinpark213.focus.updatewindow")
         registerReceiver(this.broadcastReceiver, intentFilter)
         return super.onStartCommand(intent, flags, startId)
     }

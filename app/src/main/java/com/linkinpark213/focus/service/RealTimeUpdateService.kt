@@ -97,7 +97,7 @@ class RealTimeUpdateService : Service() {
 
     private fun updateFloatingWindow() {
         val windowOnIntent = Intent()
-        windowOnIntent.setAction("com.linkinpark213.focus.updatewindow")
+        windowOnIntent.setAction("com.linkinpark213.focus.triggerwindow")
         if (calendarManager!!.ongoingEvent != null) {
             windowOnIntent.putExtra("on", true)
         } else {
