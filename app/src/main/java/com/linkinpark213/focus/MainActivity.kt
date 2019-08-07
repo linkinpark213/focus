@@ -193,11 +193,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         // Stop updating UI
         stopService(this.updateServiceIntent)
         // Kill floating window
         stopService(this.windowServiceIntent)
+        super.onDestroy()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
