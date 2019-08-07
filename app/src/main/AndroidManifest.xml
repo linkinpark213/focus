@@ -48,7 +48,7 @@
                 <action android:name="com.linkinpark213.service.MONITOR_SERVICE"/>
             </intent-filter>
         </service>
-        <receiver android:name=".util.AlarmReceiver"></receiver>
+        <receiver android:name=".receiver.AlarmReceiver"></receiver>
     </application>
 
 

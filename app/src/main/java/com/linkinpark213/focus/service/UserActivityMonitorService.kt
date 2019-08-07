@@ -1,13 +1,12 @@
 package com.linkinpark213.focus.service
 
 import android.app.Service
-import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Handler
 import android.os.IBinder
 import com.linkinpark213.focus.ReportActivity
+import com.linkinpark213.focus.receiver.UserActivityReceiver
 import com.linkinpark213.focus.view.FloatingView
 import kotlin.collections.ArrayList
 
@@ -78,25 +77,6 @@ class UserActivityMonitorService : Service() {
             }
         }
         return@Handler false
-    }
-
-    class UserActivityReceiver(private val windowMessageHandler: Handler) : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            when (intent!!.action) {
-                "com.linkinpark213.focus.stopmonitor" -> {
-                    windowMessageHandler.sendEmptyMessage(MESSAGE_STOP)
-                    println("Monitor: Stopped monitor.")
-                }
-                Intent.ACTION_SCREEN_OFF -> {
-                    windowMessageHandler.sendEmptyMessage(MESSAGE_CONTINUE)
-                    println("Monitor: User turned off screen.")
-                }
-                Intent.ACTION_USER_PRESENT -> {
-                    windowMessageHandler.sendEmptyMessage(MESSAGE_PAUSE)
-                    println("Monitor: User is active.")
-                }
-            }
-        }
     }
 
     private val broadcastReceiver = UserActivityReceiver(this.windowMessageHandler)

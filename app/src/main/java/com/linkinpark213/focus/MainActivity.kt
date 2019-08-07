@@ -7,7 +7,6 @@ import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
-import android.os.Message
 import android.provider.Settings
 import android.view.View
 import android.widget.Button
@@ -18,15 +17,19 @@ import com.google.android.gms.common.AccountPicker
 import com.google.android.gms.common.GooglePlayServicesUtil
 import com.google.api.client.util.DateTime
 import com.linkinpark213.focus.util.TimeFormatter
+import com.linkinpark213.focus.receiver.UIUpdateReceiver
 import com.wang.avi.AVLoadingIndicatorView
-import kotlinx.android.synthetic.main.activity_main.view.*
+import kotlinx.android.synthetic.main.activity_main.view.button
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), View.OnClickListener {
+
     private var updateServiceIntent: Intent = Intent()
     private var windowServiceIntent: Intent = Intent()
     private var monitorServiceIntent: Intent = Intent()
     private var focusOn: Boolean = false
     private var mainButton: Button? = null
+    private var ongoingBar: View? = null
+    private var incomingBar: View? = null
     private var uiMessageHandler: Handler = Handler {
         when (it.what) {
             MESSAGE_UPDATE_EVENTS -> {
@@ -92,15 +95,6 @@ class MainActivity : AppCompatActivity() {
         return@Handler false
     }
 
-    class UIUpdateReceiver(private var uiMessageHandler: Handler) : BroadcastReceiver() {
-        override fun onReceive(p0: Context?, p1: Intent?) {
-            val message = Message()
-            message.what = MainActivity.MESSAGE_UPDATE_EVENTS
-            message.data.putBundle("data", p1!!.extras)
-            this.uiMessageHandler.sendMessage(message)
-        }
-    }
-
     private var uiUpdateReceiver = UIUpdateReceiver(this.uiMessageHandler)
     private var updateIntentFilter = IntentFilter()
 
@@ -147,12 +141,16 @@ class MainActivity : AppCompatActivity() {
         registerReceiver(uiUpdateReceiver, updateIntentFilter)
 
         // EventListeners
-        this.mainButton!!.setOnClickListener {
-            run {
+        this.mainButton!!.setOnClickListener(this)
+    }
+
+    override fun onClick(v: View?) {
+        when (v) {
+            this.mainButton -> {
                 if (this.focusOn) {
                     this.focusOn = false
-                    it.button.setText(R.string.focus_on_button_text)
-                    it.button.background = resources.getDrawable(R.drawable.button_background_on, theme)
+                    v!!.button.setText(R.string.focus_on_button_text)
+                    v.button.background = resources.getDrawable(R.drawable.button_background_on, theme)
 
                     // Kill floating window service
                     stopService(this.windowServiceIntent)
@@ -162,8 +160,8 @@ class MainActivity : AppCompatActivity() {
                     Toast.makeText(applicationContext, "Focus mode is turned OFF.", Toast.LENGTH_SHORT).show()
                 } else {
                     this.focusOn = true
-                    it.button.setText(R.string.focus_off_button_text)
-                    it.button.background = resources.getDrawable(R.drawable.button_background_off, theme)
+                    v!!.button.setText(R.string.focus_off_button_text)
+                    v.button.background = resources.getDrawable(R.drawable.button_background_off, theme)
 
                     // Turn on a service that puts a floating window
                     if (!Settings.canDrawOverlays(this)) {

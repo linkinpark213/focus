@@ -1,13 +1,14 @@
 package com.linkinpark213.focus.service
 
 import android.app.AlarmManager
+import android.app.Notification
 import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.IBinder
 import android.os.SystemClock
-import com.linkinpark213.focus.util.AlarmReceiver
+import com.linkinpark213.focus.receiver.AlarmReceiver
 import com.linkinpark213.focus.calendar.CalendarManager
 import com.linkinpark213.focus.task.AsyncGetCalendarListTask
 
@@ -21,6 +22,7 @@ class RealTimeUpdateService : Service() {
 
     override fun onCreate() {
         println("Events-fetching Service is ON")
+        startForeground(1, Notification())
     }
 
     override fun onBind(intent: Intent?): IBinder? {
