@@ -165,16 +165,27 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-            <com.wang.avi.AVLoadingIndicatorView
+            <LinearLayout
+                    android:orientation="vertical"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:indicatorName="BallScaleIndicator"
-                    app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    android:scaleY="2"
-                    android:scaleX="2"
-                    android:id="@+id/loadingAnimation"/>
+                    android:layout_height="wrap_content" app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5" app:layout_constraintEnd_toEndOf="parent"
+                    android:gravity="center">
+                <TextView
+                        android:text="@string/connecting_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:id="@+id/loadingTextView"
+                        android:textColor="@color/colorWhite" android:textSize="18sp" android:gravity="center"/>
+                <com.wang.avi.AVLoadingIndicatorView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:indicatorName="BallScaleIndicator"
+                        android:scaleY="1.5"
+                        android:scaleX="1.5"
+                        android:id="@+id/loadingAnimation"
+                        android:layout_margin="20dp"/>
+            </LinearLayout>
         </android.support.constraint.ConstraintLayout>
     </FrameLayout>
 

@@ -19,7 +19,6 @@ import com.google.android.gms.common.GooglePlayServicesUtil
 import com.google.api.client.util.DateTime
 import com.linkinpark213.focus.util.TimeFormatter
 import com.wang.avi.AVLoadingIndicatorView
-import com.wang.avi.Indicator
 import kotlinx.android.synthetic.main.activity_main.view.*
 
 class MainActivity : AppCompatActivity() {
@@ -43,6 +42,7 @@ class MainActivity : AppCompatActivity() {
                 // Clear loading state
                 findViewById<AVLoadingIndicatorView>(R.id.loadingAnimation).hide()
                 findViewById<View>(R.id.loadingDarkCurtain).visibility = View.INVISIBLE
+                findViewById<View>(R.id.loadingTextView).visibility = View.INVISIBLE
 
                 findViewById<TextView>(R.id.ongoingEventTextView).text = ongoingEventSummary
                 if (ongoingEventSummary != "None") {

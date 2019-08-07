@@ -20,4 +20,5 @@
     <string name="report_end_time_text">and ending at</string>
     <string name="report_time_awaken_text">Time you awakened your phone</string>
     <string name="report_time_offtrack_text">Total time spent on phone</string>
+    <string name="connecting_text">Connecting to your Google Calendar</string>
 </resources>
