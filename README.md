@@ -9,6 +9,8 @@
 ![](https://img.shields.io/badge/language-kotlin-orange.svg)
 ![](https://img.shields.io/badge/license-MIT-000000.svg)
 
+This repository is under not-so-active development.
+
 # Introduction
 
 A simple Android application featuring a work-time supervisor.
