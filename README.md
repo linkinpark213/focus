@@ -9,7 +9,7 @@
 ![](https://img.shields.io/badge/language-kotlin-orange.svg)
 ![](https://img.shields.io/badge/license-MIT-000000.svg)
 
-This repository is under not-so-active development.
+This repository is my submission for the M1 Grand-Prix contest of NAIST UbiLab. Under not-so-active development.
 
 # Introduction
 
@@ -64,7 +64,7 @@ My application credential hasn't been approved by Google, so by far you have to 
 
 - Import this project in your Android Studio.
   - Select "Import Project..." or File > Import Project...
-  - Select \[someDirectory\]/focus/build.gradle and click OK.
+  - Select \[someDirectory\]/focus/build.gradle and click OK. (NOT focus/focus/build.gradle !)
   - Select "Use local gradle distribution" with "Gradle home" of \[someDirectory\]/gradle-3.4.2 and click OK.
 - Open AndroidManifest.xml and change the package attribute of the manifest, initially "com.linkinpark213.focus", to match the name you registered in the Google Cloud Console, e.g. "com.linkinpark213.focus.harper1125".
 - Rename the Java package: right-click on app/src/main/java, click New, click Package, and then enter the name you registered in the Google Cloud Console, e.g. "com.linkinpark213.focus.harper1125". Next, select the Java classes in the package "com.linkinpark213.focus", drag them into the new package you just created, and then click Refactor.
